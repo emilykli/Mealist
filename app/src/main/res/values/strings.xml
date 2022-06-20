@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Mealist</string>
+
+    <string name="access_field_1">Username</string>
+    <string name="access_field_2">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="signup_string">New to Mealist?</string>
+    <string name="sign_up">Sign Up</string>
 </resources>

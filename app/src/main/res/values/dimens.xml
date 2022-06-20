@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="access_margin_horizontal">15dp</dimen>
+    <dimen name="access_margin_vertical">5dp</dimen>
+    <dimen name="logo_size">50dp</dimen>
+    <dimen name="access_text_size">35sp</dimen>
+    <dimen name="access_word_top">15dp</dimen>
+    <dimen name="access_word_bottom">5dp</dimen>
+    <dimen name="shift_logo_left">-3dp</dimen>
+    <dimen name="shift_word_right">3dp</dimen>
+    <dimen name="signup_words_margin">5dp</dimen>
+    <dimen name="corner_radius">50dp</dimen>
+
+    <dimen name="zero">0dp</dimen>
+</resources>
