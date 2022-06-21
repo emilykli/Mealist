@@ -6,4 +6,66 @@
     android:layout_height="match_parent"
     tools:context=".Access.SignupActivity">
 
+    <LinearLayout
+        android:id="@+id/llLogoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/access_word_top"
+        android:layout_marginBottom="@dimen/access_word_bottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/tvSignup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up"
+            android:textSize="@dimen/access_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/etUsername"
+            />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/access_field_1"
+        android:inputType="textPersonName"
+        android:layout_marginHorizontal="@dimen/access_margin_horizontal"
+        android:layout_marginVertical="@dimen/access_margin_vertical"
+        app:layout_constraintTop_toBottomOf="@id/llLogoText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="98dp" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/access_field_2"
+        android:inputType="textPersonName"
+        android:layout_marginHorizontal="@dimen/access_margin_horizontal"
+        android:layout_marginVertical="@dimen/access_margin_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+
+    <Button
+        android:id="@+id/btnSignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/access_margin_horizontal"
+        android:layout_marginVertical="@dimen/access_margin_vertical"
+        android:text="@string/sign_up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         tvSignupLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "clicked signup button");
+                goSignupActivity();
             }
         });
     }
@@ -77,6 +77,12 @@ public class LoginActivity extends AppCompatActivity {
 
     public void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    public void goSignupActivity() {
+        Intent i = new Intent(this, SignupActivity.class);
         startActivity(i);
         finish();
     }
