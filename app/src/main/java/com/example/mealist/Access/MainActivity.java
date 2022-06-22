@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Fragment fragment;
                 switch (menuItem.getItemId()) {
-                    // TODO: create ListFragment and AddFragment, then put them in correct places
                     case R.id.miList:
                         fragment = new ListFragment();
                         break;

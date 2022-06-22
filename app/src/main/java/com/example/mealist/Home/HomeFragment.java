@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.example.mealist.R;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 
 public class HomeFragment extends Fragment {
@@ -24,7 +23,6 @@ public class HomeFragment extends Fragment {
     TextView mTvDateDay;
 
     public HomeFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -36,7 +34,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -50,9 +47,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void setTvDates() {
-        LocalDate mDate = LocalDate.now();
-        mTvDateMonth.setText(mDate.getMonth().toString());
-        mTvDateDay.setText(""+mDate.getDayOfMonth());
+        LocalDate date = LocalDate.now();
+        mTvDateMonth.setText(date.getMonth().toString());
+        mTvDateDay.setText(""+date.getDayOfMonth());
     }
 
 

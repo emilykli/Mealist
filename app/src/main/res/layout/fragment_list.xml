@@ -14,10 +14,11 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
+            android:id="@+id/tvStartDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/grocery_date_text_size"
-            android:layout_margin="@dimen/grocery_date_margin"
+            android:textSize="@dimen/date_text_size"
+            android:layout_margin="@dimen/date_margin"
             tools:text="@string/sample_start_range"
             />
 
@@ -25,14 +26,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dash"
-            android:textSize="@dimen/grocery_date_text_size"
-            android:layout_margin="@dimen/grocery_date_margin"/>
+            android:textSize="@dimen/date_text_size"
+            android:layout_margin="@dimen/date_margin"/>
 
         <TextView
+            android:id='@+id/tvEndDate'
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/grocery_date_text_size"
-            android:layout_margin="@dimen/grocery_date_margin"
+            android:textSize="@dimen/date_text_size"
+            android:layout_margin="@dimen/date_margin"
             tools:text="@string/sample_end_range"/>
 
     </LinearLayout>

@@ -55,7 +55,7 @@ public class SignupActivity extends AppCompatActivity {
                 if (e == null) {
                     goPostActivity();
                 } else {
-                    Log.e(TAG, "signup issue", e);
+                    return;
                 }
             }
 
@@ -71,13 +71,10 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void loginUser(String username, String password) {
-        Log.i(TAG, "Attempting to log in user " + username);
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (e != null) {
-                    // something has gone wrong
-                    Log.e(TAG, "Issue with login", e);
                     return;
                 }
 
