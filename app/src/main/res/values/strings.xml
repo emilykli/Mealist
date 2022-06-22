@@ -20,5 +20,6 @@
     <string name="lunch">Lunch:</string>
     <string name="dinner">Dinner:</string>
     <string name="meal_hint">Click to add meals</string>
+    <string name="submit">Submit</string>
 
 </resources>

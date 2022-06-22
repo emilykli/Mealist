@@ -2,6 +2,7 @@ package com.example.mealist.Backend;
 
 import android.app.Application;
 
+import com.example.mealist.Add.MealPlan;
 import com.example.mealist.BuildConfig;
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -15,7 +16,7 @@ public class ParseApplication extends Application {
 //        ParseObject.registerSubclass(GroceryList.class);
 //        ParseObject.registerSubclass(Ingredient.class);
 //        ParseObject.registerSubclass(Recipe.class);
-//        ParseObject.registerSubclass(MealPlan.class);
+        ParseObject.registerSubclass(MealPlan.class);
 
 
         Parse.initialize(new Parse.Configuration.Builder(this)
