@@ -18,7 +18,7 @@ public class SpoonacularClient extends AsyncHttpClient {
     public void getRecipes(String query, JsonHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.put("query", query);
-        params.put("number", 3);
+        params.put("number", 1);
         get(RECIPE_SEARCH_URL, params, handler);
     }
 

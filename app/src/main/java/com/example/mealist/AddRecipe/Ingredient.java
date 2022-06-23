@@ -22,7 +22,7 @@ public class Ingredient extends ParseObject{
         return getNumber(KEY_QUANTITY);
     }
 
-    public void setNumber(Number quantity) {
+    public void setQuantity(Number quantity) {
         put(KEY_QUANTITY, quantity);
     }
 

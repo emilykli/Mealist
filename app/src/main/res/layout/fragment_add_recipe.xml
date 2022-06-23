@@ -30,8 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/recipe_picker_margin"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="@string/search_hint"
+        android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSelectingFor" />
 
@@ -43,5 +43,13 @@
         android:layout_margin="@dimen/recipe_picker_margin"
         app:layout_constraintStart_toEndOf="@+id/etRecipeSearch"
         app:layout_constraintTop_toBottomOf="@+id/tvMealName" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecipeSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/recipe_picker_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etRecipeSearch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

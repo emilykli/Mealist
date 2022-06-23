@@ -9,6 +9,7 @@ import org.json.JSONArray;
 public class Recipe extends ParseObject {
     public static final String KEY_NAME = "name";
     public static final String KEY_INGREDIENTS = "ingredients";
+    public static final String KEY_IMAGE_LINK = "imageLink";
 
     public String getName() {
         return getString(KEY_NAME);
@@ -25,4 +26,8 @@ public class Recipe extends ParseObject {
     public void setIngredients(JSONArray ingredients) {
         put(KEY_INGREDIENTS, ingredients);
     }
+
+    public String getImageLink() { return getString(KEY_IMAGE_LINK); }
+
+    public void setImageLink(String link) { put(KEY_IMAGE_LINK, link); }
 }

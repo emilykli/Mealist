@@ -27,4 +27,6 @@
     <string name="search">Search</string>
     <string name="search_hint">Search recipe by name</string>
 
+    <string name="sample_recipe_name">Pesto Yogurt Pasta</string>
+
 </resources>
