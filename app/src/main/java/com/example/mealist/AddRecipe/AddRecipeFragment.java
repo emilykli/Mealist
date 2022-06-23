@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,8 @@ public class AddRecipeFragment extends Fragment {
     private RecyclerView mRvRecipeSearchResults;
     private RecipeAdapter mAdapter;
     private List<Recipe> mRecipes;
+
+    private ProgressBar mPbLoading;
 
     SpoonacularClient client;
 
@@ -88,6 +91,8 @@ public class AddRecipeFragment extends Fragment {
         mRvRecipeSearchResults.setAdapter(mAdapter);
         mRvRecipeSearchResults.setLayoutManager(linearLayoutManager);
 
+        mPbLoading = view.findViewById(R.id.pbLoading);
+
     }
 
     public void setupSearchButton() {
@@ -99,12 +104,14 @@ public class AddRecipeFragment extends Fragment {
                     Toast.makeText(getContext(), "search cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                mPbLoading.setVisibility(ProgressBar.VISIBLE);
                 client.getRecipes(searchQuery, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         JSONObject jsonObject = json.jsonObject;
                         mAdapter.clear();
                         addRecipes(jsonObject);
+                        mPbLoading.setVisibility(ProgressBar.INVISIBLE);
                     }
 
                     @Override
