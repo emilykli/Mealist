@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mealist"
         tools:targetApi="31">
-
+        <activity
+            android:name=".AddRecipe.RecipeDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".Access.SignupActivity"
             android:exported="false" />

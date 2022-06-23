@@ -1,6 +1,7 @@
 package com.example.mealist.AddRecipe;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         @Override
         public void onClick(View v) {
             Toast.makeText(mContext, "Recipe clicked!", Toast.LENGTH_SHORT).show();
+            final Recipe recipe = (Recipe) v.getTag();
+            if (recipe != null) {
+                Intent i = new Intent(mContext, RecipeDetailActivity.class);
+                i.putExtra("recipe", recipe);
+                mContext.startActivity(i);
+            }
         }
 
         public void bind(Recipe recipe) {

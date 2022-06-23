@@ -34,7 +34,7 @@ import java.util.List;
 
 public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
-    public static final String TAG = "AddFragment";
+    public static final String TAG = "MakePlanFragment";
 
     private TextView mTvDatePicker;
     private TextView mTvBreakfastMeals;
@@ -57,6 +57,7 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         super.onCreate(savedInstanceState);
 
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
