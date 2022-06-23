@@ -1,4 +1,4 @@
-package com.example.mealist.Add;
+package com.example.mealist.MakeMealPlan;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;

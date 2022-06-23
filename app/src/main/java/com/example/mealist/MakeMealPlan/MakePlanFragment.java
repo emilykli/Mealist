@@ -1,4 +1,4 @@
-package com.example.mealist.Add;
+package com.example.mealist.MakeMealPlan;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +17,9 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mealist.AddRecipe.AddRecipeFragment;
 import com.example.mealist.R;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -31,11 +32,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class AddFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
+public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
     public static final String TAG = "AddFragment";
 
     private TextView mTvDatePicker;
+    private TextView mTvBreakfastMeals;
+    private TextView mTvLunchMeals;
+    private TextView mTvDinnerMeals;
     private Button mBtnSubmitMealPlan;
 
     private JSONArray mBreakfast;
@@ -44,7 +48,7 @@ public class AddFragment extends Fragment implements DatePickerDialog.OnDateSetL
     private MealPlan mMealPlan;
 
 
-    public AddFragment() {
+    public MakePlanFragment() {
     }
 
 
@@ -57,12 +61,18 @@ public class AddFragment extends Fragment implements DatePickerDialog.OnDateSetL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add, container, false);
+        return inflater.inflate(R.layout.fragment_make_plan, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mTvBreakfastMeals = view.findViewById(R.id.tvBreakfastMeals);
+        mTvLunchMeals = view.findViewById(R.id.tvLunchMeals);
+        mTvDinnerMeals = view.findViewById(R.id.tvDinnerMeals);
+
+        setMealOnClickListeners();
 
         mDate = null;
 
@@ -87,6 +97,7 @@ public class AddFragment extends Fragment implements DatePickerDialog.OnDateSetL
             }
         });
     }
+
 
     public void showDatePickerDialog(){
         DatePickerDialog datePickerDialog = new DatePickerDialog(
@@ -162,5 +173,33 @@ public class AddFragment extends Fragment implements DatePickerDialog.OnDateSetL
 
             }
         });
+    }
+
+    public void setMealOnClickListeners() {
+        mTvBreakfastMeals.setOnClickListener(this);
+        mTvLunchMeals.setOnClickListener(this);
+        mTvDinnerMeals.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.tvBreakfastMeals || v.getId() == R.id.tvLunchMeals || v.getId() == R.id.tvDinnerMeals) {
+            Fragment fragment = new AddRecipeFragment();
+            Bundle meal = new Bundle();
+            switch(v.getId()){
+                case R.id.tvBreakfastMeals:
+                    meal.putString("meal", "breakfast");
+                    break;
+                case R.id.tvLunchMeals:
+                    meal.putString("meal", "lunch");
+                    break;
+                case R.id.tvDinnerMeals:
+                    meal.putString("meal", "dinner");
+                    break;
+            }
+            fragment.setArguments(meal);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+        }
     }
 }

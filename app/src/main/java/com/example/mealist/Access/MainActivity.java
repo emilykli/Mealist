@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.mealist.Add.AddFragment;
+import com.example.mealist.MakeMealPlan.MakePlanFragment;
 import com.example.mealist.GroceryList.ListFragment;
 import com.example.mealist.Home.HomeFragment;
 import com.example.mealist.R;
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.miAdd:
                     default:
-                        fragment = new AddFragment();
+                        fragment = new MakePlanFragment();
                         break;
                 }
                 mFragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();

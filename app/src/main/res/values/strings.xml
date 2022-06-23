@@ -22,4 +22,9 @@
     <string name="meal_hint">Click to add meals</string>
     <string name="submit">Submit</string>
 
+    <string name="selecting_for">Selecting recipe for:</string>
+    <string name="generic_meal">meal</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search recipe by name</string>
+
 </resources>

@@ -19,4 +19,6 @@
     <dimen name="add_meal_corner_radius">20dp</dimen>
     <dimen name="meal_padding_margin">10dp</dimen>
     <dimen name="date_picker_margin">15dp</dimen>
+
+    <dimen name="recipe_picker_margin">5dp</dimen>
 </resources>
