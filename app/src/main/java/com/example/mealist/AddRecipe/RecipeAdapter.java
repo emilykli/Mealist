@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -21,10 +22,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     private Context mContext;
     private List<Recipe> mRecipes;
+    private FragmentManager mFragmentManager;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes) {
+    public RecipeAdapter(Context context, List<Recipe> recipes, FragmentManager fragmentManager) {
         mContext = context;
         mRecipes = recipes;
+        mFragmentManager = fragmentManager;
     }
 
     @NonNull

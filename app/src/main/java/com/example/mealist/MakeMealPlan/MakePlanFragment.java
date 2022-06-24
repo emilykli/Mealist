@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mealist.AddRecipe.AddRecipeFragment;
+import com.example.mealist.AddRecipe.Recipe;
 import com.example.mealist.R;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
@@ -25,6 +27,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +45,9 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
     private TextView mTvDinnerMeals;
     private Button mBtnSubmitMealPlan;
 
-    private JSONArray mBreakfast;
+    private JSONArray mBreakfast = new JSONArray();
+    private JSONArray mLunch = new JSONArray();
+    private JSONArray mDinner = new JSONArray();
 
     private Date mDate;
     private MealPlan mMealPlan;
@@ -56,6 +61,22 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        getParentFragmentManager().setFragmentResultListener("makePlanFragment", this, new FragmentResultListener() {
+//            @Override
+//            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+//                // TODO: get the recipe
+//                Recipe result = (Recipe) bundle.getParcelable("recipe");
+//            }
+//        });
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            Recipe recipe = bundle.getParcelable("recipe");
+            Log.i(TAG, "recipe name: " + recipe.getName());
+            mBreakfast.put(recipe);
+        }
+        else {
+            Log.i(TAG, "bundle was null");
+        }
     }
 
 
@@ -73,11 +94,15 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         mTvLunchMeals = view.findViewById(R.id.tvLunchMeals);
         mTvDinnerMeals = view.findViewById(R.id.tvDinnerMeals);
 
+        try {
+            populateMeals();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         setMealOnClickListeners();
 
         mDate = null;
-
-        mBreakfast = new JSONArray();
 
         mTvDatePicker = view.findViewById(R.id.tvDatePicker);
 
@@ -97,6 +122,15 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
                 submitMealPlan();
             }
         });
+    }
+
+    private void populateMeals() throws JSONException {
+        if (mBreakfast.length() > 0) {
+            for (int i = 0; i < mBreakfast.length(); i++) {
+                Recipe recipe = (Recipe) mBreakfast.get(i);
+                mTvBreakfastMeals.setText(recipe.getName());
+            }
+        }
     }
 
 
@@ -137,6 +171,10 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         }
         mMealPlan.setOwner(ParseUser.getCurrentUser());
         mMealPlan.setDayOf(mDate);
+        mMealPlan.setBreakfast(mBreakfast);
+        mMealPlan.setLunch(mLunch);
+        mMealPlan.setDinner(mDinner);
+
         mMealPlan.saveInBackground(new SaveCallback() {
             @Override
             public void done(com.parse.ParseException e) {

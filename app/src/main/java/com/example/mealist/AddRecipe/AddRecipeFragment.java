@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,7 +86,7 @@ public class AddRecipeFragment extends Fragment {
         mRvRecipeSearchResults = view.findViewById(R.id.rvRecipeSearchResults);
 
         mRecipes = new ArrayList<>();
-        mAdapter = new RecipeAdapter(getContext(), mRecipes);
+        mAdapter = new RecipeAdapter(getContext(), mRecipes, getParentFragmentManager());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
         mRvRecipeSearchResults.setAdapter(mAdapter);

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.mealist.AddRecipe.Recipe;
 import com.example.mealist.MakeMealPlan.MakePlanFragment;
 import com.example.mealist.GroceryList.ListFragment;
 import com.example.mealist.Home.HomeFragment;
@@ -24,6 +25,7 @@ import com.parse.ParseUser;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
 
+    // TODO: pass this to recipedetailactivity
     final FragmentManager mFragmentManager = getSupportFragmentManager();
     private BottomNavigationView mBottomNavigationView;
 
@@ -35,6 +37,17 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView = findViewById(R.id.bottomNavigation);
         setupBottomNavigationView();
         mBottomNavigationView.setSelectedItemId(R.id.miHome);
+
+        if (getIntent().getExtras() != null) {
+            Recipe recipe = getIntent().getParcelableExtra("clickedRecipe");
+            Fragment fragment = new MakePlanFragment();
+            Bundle arguments = new Bundle();
+            arguments.putParcelable("recipe", recipe);
+            fragment.setArguments(arguments);
+            Log.i(TAG, fragment.getArguments().toString());
+            mBottomNavigationView.setSelectedItemId(R.id.miAdd);
+            mFragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+        }
     }
 
 
@@ -84,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.miHome:
                         fragment = new HomeFragment();
                         break;
-                    case R.id.miAdd:
+                    case R.id.miAdd: // TODO: change name
                     default:
                         fragment = new MakePlanFragment();
                         break;

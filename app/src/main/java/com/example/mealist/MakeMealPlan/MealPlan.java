@@ -28,13 +28,19 @@ public class MealPlan extends ParseObject {
         return getJSONArray(KEY_BREAKFAST);
     }
 
+    public void setBreakfast(JSONArray breakfast) { put(KEY_BREAKFAST, breakfast); }
+
     public JSONArray getLunch() {
         return getJSONArray(KEY_LUNCH);
     }
 
+    public void setLunch(JSONArray lunch) { put(KEY_LUNCH, lunch); }
+
     public JSONArray getDinner() {
         return getJSONArray(KEY_DINNER);
     }
+
+    public void setDinner(JSONArray dinner) { put(KEY_DINNER, dinner); }
 
     public Date getDayOf() {
         return getDate(KEY_DAY_OF);
