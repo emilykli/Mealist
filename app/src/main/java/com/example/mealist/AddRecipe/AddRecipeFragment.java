@@ -38,6 +38,11 @@ public class AddRecipeFragment extends Fragment {
     public static final String TAG = "AddRecipeFragment";
 
     private TextView mTvMealName;
+
+    protected static String mMealTime;
+    protected static String mBreakfast;
+    protected static String mLunch;
+    protected static String mDinner;
     protected static String mMealName;
 
     private EditText mEtRecipeSearch;
@@ -59,6 +64,10 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMealTime = getArguments().getString("date", "");
+        mBreakfast = getArguments().getString("breakfastArray");
+        mLunch = getArguments().getString("lunchArray");
+        mDinner = getArguments().getString("dinnerArray");
         mMealName = getArguments().getString("meal", "default meal");
 
     }

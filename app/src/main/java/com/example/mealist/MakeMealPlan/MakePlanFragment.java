@@ -40,6 +40,8 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
     public static final String TAG = "MakePlanFragment";
 
     private TextView mTvDatePicker;
+    private String mDateString;
+
     private TextView mTvBreakfastMeals;
     private TextView mTvLunchMeals;
     private TextView mTvDinnerMeals;
@@ -61,15 +63,24 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        getParentFragmentManager().setFragmentResultListener("makePlanFragment", this, new FragmentResultListener() {
-//            @Override
-//            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-//                // TODO: get the recipe
-//                Recipe result = (Recipe) bundle.getParcelable("recipe");
-//            }
-//        });
         Bundle bundle = this.getArguments();
         if (bundle != null) {
+            if (bundle.getParcelable("dateString") != null) {
+                mDateString = bundle.getParcelable("dateString");
+            }
+
+            // TODO: String -> JSONArray doesn't work because the objects stay strings
+            //  find other way to pass around meals :(
+
+//            try {
+//                mBreakfast = new JSONArray(bundle.getString("breakfastArray"));
+//                mLunch = new JSONArray(bundle.getString("lunchArray"));
+//                mDinner = new JSONArray(bundle.getString("dinnerArray"));
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
             if (bundle.getParcelable("breakfastRecipe") != null) {
                 Recipe breakfast = bundle.getParcelable("breakfastRecipe");
                 Log.i(TAG, "breakfast: " + breakfast.getName());
@@ -118,6 +129,10 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         mDate = null;
 
         mTvDatePicker = view.findViewById(R.id.tvDatePicker);
+
+        if (mDateString != null) {
+            mTvDatePicker.setText(mDateString);
+        }
 
         mTvDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,7 +224,11 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
                     return;
                 }
                 Toast.makeText(getContext(), "Meal plan saved successfully", Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "meal plan saved");
+//                Log.i(TAG, "meal plan saved");
+                mTvDatePicker.setText("");
+                mTvBreakfastMeals.setText("");
+                mTvLunchMeals.setText("");
+                mTvDinnerMeals.setText("");
             }
         });
     }
@@ -228,11 +247,20 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
                 }
 
                 if (plans.size() == 0) {
+                    Log.i(TAG, "no meal plan found");
                     mMealPlan = new MealPlan();
                 }
 
                 else {
+                    Log.i(TAG, "found the meal plan");
                     mMealPlan = plans.get(0);
+                    mBreakfast = mMealPlan.getBreakfast();
+                    Log.i(TAG, mBreakfast.toString());
+                    mLunch = mMealPlan.getLunch();
+                    Log.i(TAG, mLunch.toString());
+                    mDinner = mMealPlan.getDinner();
+                    Log.i(TAG, mDinner.toString());
+
                 }
 
             }
@@ -250,6 +278,12 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         if (v.getId() == R.id.tvBreakfastMeals || v.getId() == R.id.tvLunchMeals || v.getId() == R.id.tvDinnerMeals) {
             Fragment fragment = new AddRecipeFragment();
             Bundle meal = new Bundle();
+            if (mDate != null) {
+                meal.putString("date", mTvDatePicker.getText().toString());
+            }
+            meal.putString("breakfastArray", mBreakfast.toString());
+            meal.putString("lunchArray", mLunch.toString());
+            meal.putString("dinnerArray", mDinner.toString());
             switch(v.getId()){
                 case R.id.tvBreakfastMeals:
                     meal.putString("meal", "breakfast");

@@ -10,7 +10,7 @@
         app:showAsAction="always"
         android:title="Home" />
     <item
-        android:id="@+id/miAdd"
+        android:id="@+id/miMakePlan"
         app:showAsAction="always"
         android:title="Add" />
 <!--    <item-->

@@ -28,10 +28,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     final FragmentManager mFragmentManager = getSupportFragmentManager();
 
-    // TODO: make onclick for button and then
-    //                 mFragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
-    // if that doesn't work pass in fragment manager from mainactivity and use that one instead
-
     private ImageView mIvRecipeImage;
     private TextView mTvRecipeName;
     private TextView mTvRecipeIngredients;
@@ -69,6 +65,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Intent i = new Intent(RecipeDetailActivity.this, MainActivity.class);
+                    i.putExtra("dateString", AddRecipeFragment.mMealTime);
+                    i.putExtra("breakfastArray", AddRecipeFragment.mBreakfast);
+                    i.putExtra("lunchArray", AddRecipeFragment.mLunch);
+                    i.putExtra("dinnerArray", AddRecipeFragment.mDinner);
                     i.putExtra(AddRecipeFragment.mMealName + "ClickedRecipe", mRecipe);
                     startActivity(i);
                 }

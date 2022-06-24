@@ -25,7 +25,6 @@ import com.parse.ParseUser;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
 
-    // TODO: pass this to recipedetailactivity
     final FragmentManager mFragmentManager = getSupportFragmentManager();
     private BottomNavigationView mBottomNavigationView;
 
@@ -39,11 +38,21 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView.setSelectedItemId(R.id.miHome);
 
         if (getIntent().getExtras() != null) {
+            String dateString = getIntent().getStringExtra("dateString");
+
+            String breakfastArray = getIntent().getStringExtra("breakfastArray");
+            String lunchArray = getIntent().getStringExtra("lunchArray");
+            String dinnerArray = getIntent().getStringExtra("dinnerArray");
+
             Recipe breakfast = getIntent().getParcelableExtra("breakfastClickedRecipe");
             Recipe lunch = getIntent().getParcelableExtra("lunchClickedRecipe");
             Recipe dinner = getIntent().getParcelableExtra("dinnerClickedRecipe");
+
             Fragment fragment = new MakePlanFragment();
             Bundle arguments = new Bundle();
+
+            arguments.putString("dateString", dateString);
+
             if (breakfast != null) {
                 arguments.putParcelable("breakfastRecipe", breakfast);
             }
@@ -53,9 +62,13 @@ public class MainActivity extends AppCompatActivity {
             if (dinner != null) {
                 arguments.putParcelable("dinnerRecipe", dinner);
             }
+            arguments.putString("breakfastArray", breakfastArray);
+            arguments.putString("lunchArray", lunchArray);
+            arguments.putString("dinnerArray", dinnerArray);
+
             fragment.setArguments(arguments);
             Log.i(TAG, fragment.getArguments().toString());
-            mBottomNavigationView.setSelectedItemId(R.id.miAdd);
+            mBottomNavigationView.setSelectedItemId(R.id.miMakePlan);
             mFragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
         }
     }
@@ -107,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.miHome:
                         fragment = new HomeFragment();
                         break;
-                    case R.id.miAdd: // TODO: change name
+                    case R.id.miMakePlan:
                     default:
                         fragment = new MakePlanFragment();
                         break;
