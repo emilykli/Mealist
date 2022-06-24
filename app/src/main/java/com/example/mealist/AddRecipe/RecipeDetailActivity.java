@@ -69,7 +69,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Intent i = new Intent(RecipeDetailActivity.this, MainActivity.class);
-                    i.putExtra("clickedRecipe", mRecipe);
+                    i.putExtra(AddRecipeFragment.mMealName + "ClickedRecipe", mRecipe);
                     startActivity(i);
                 }
             });

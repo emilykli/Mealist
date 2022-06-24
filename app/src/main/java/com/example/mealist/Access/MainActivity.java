@@ -39,10 +39,20 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView.setSelectedItemId(R.id.miHome);
 
         if (getIntent().getExtras() != null) {
-            Recipe recipe = getIntent().getParcelableExtra("clickedRecipe");
+            Recipe breakfast = getIntent().getParcelableExtra("breakfastClickedRecipe");
+            Recipe lunch = getIntent().getParcelableExtra("lunchClickedRecipe");
+            Recipe dinner = getIntent().getParcelableExtra("dinnerClickedRecipe");
             Fragment fragment = new MakePlanFragment();
             Bundle arguments = new Bundle();
-            arguments.putParcelable("recipe", recipe);
+            if (breakfast != null) {
+                arguments.putParcelable("breakfastRecipe", breakfast);
+            }
+            if (lunch != null) {
+                arguments.putParcelable("lunchRecipe", lunch);
+            }
+            if (dinner != null) {
+                arguments.putParcelable("dinnerRecipe", dinner);
+            }
             fragment.setArguments(arguments);
             Log.i(TAG, fragment.getArguments().toString());
             mBottomNavigationView.setSelectedItemId(R.id.miAdd);

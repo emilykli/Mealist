@@ -70,9 +70,22 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
 //        });
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            Recipe recipe = bundle.getParcelable("recipe");
-            Log.i(TAG, "recipe name: " + recipe.getName());
-            mBreakfast.put(recipe);
+            if (bundle.getParcelable("breakfastRecipe") != null) {
+                Recipe breakfast = bundle.getParcelable("breakfastRecipe");
+                Log.i(TAG, "breakfast: " + breakfast.getName());
+                mBreakfast.put(breakfast);
+            }
+            if (bundle.getParcelable("lunchRecipe") != null) {
+                Recipe lunch = bundle.getParcelable("lunchRecipe");
+                Log.i(TAG, "lunch: " + lunch.getName());
+                mLunch.put(lunch);
+            }
+            if (bundle.getParcelable("dinnerRecipe") != null) {
+                Recipe dinner = bundle.getParcelable("dinnerRecipe");
+                Log.i(TAG, "dinner: " + dinner.getName());
+                mDinner.put(dinner);
+            }
+
         }
         else {
             Log.i(TAG, "bundle was null");
@@ -129,6 +142,18 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
             for (int i = 0; i < mBreakfast.length(); i++) {
                 Recipe recipe = (Recipe) mBreakfast.get(i);
                 mTvBreakfastMeals.setText(recipe.getName());
+            }
+        }
+        if (mLunch.length() > 0) {
+            for (int i = 0; i < mLunch.length(); i++) {
+                Recipe recipe = (Recipe) mLunch.get(i);
+                mTvLunchMeals.setText(recipe.getName());
+            }
+        }
+        if (mDinner.length() > 0) {
+            for (int i = 0; i < mDinner.length(); i++) {
+                Recipe recipe = (Recipe) mDinner.get(i);
+                mTvDinnerMeals.setText(recipe.getName());
             }
         }
     }

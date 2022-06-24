@@ -38,7 +38,7 @@ public class AddRecipeFragment extends Fragment {
     public static final String TAG = "AddRecipeFragment";
 
     private TextView mTvMealName;
-    private String mMealName;
+    protected static String mMealName;
 
     private EditText mEtRecipeSearch;
     private Button mBtnSearch;
