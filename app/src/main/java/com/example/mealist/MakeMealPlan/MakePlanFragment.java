@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentResultListener;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,21 +65,29 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            if (bundle.getParcelable("dateString") != null) {
-                mDateString = bundle.getParcelable("dateString");
+            if (bundle.getString("dateString") != null) {
+                mDateString = bundle.getString("dateString");
             }
 
             // TODO: String -> JSONArray doesn't work because the objects stay strings
             //  find other way to pass around meals :(
 
-//            try {
+            try {
 //                mBreakfast = new JSONArray(bundle.getString("breakfastArray"));
 //                mLunch = new JSONArray(bundle.getString("lunchArray"));
 //                mDinner = new JSONArray(bundle.getString("dinnerArray"));
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+                mBreakfast = new JSONArray(bundle.getString("breakfastArray"));
+                mBreakfast = jsonObjectToRecipeArray(mBreakfast);
+                mLunch = new JSONArray(bundle.getString("lunchArray"));
+                mLunch = jsonObjectToRecipeArray(mLunch);
+                mDinner = new JSONArray(bundle.getString("dinnerArray"));
+                mDinner = jsonObjectToRecipeArray(mDinner);
+
+//                populateMeals();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             if (bundle.getParcelable("breakfastRecipe") != null) {
                 Recipe breakfast = bundle.getParcelable("breakfastRecipe");
@@ -147,25 +155,29 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         mBtnSubmitMealPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitMealPlan();
+                try {
+                    submitMealPlan();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
     private void populateMeals() throws JSONException {
-        if (mBreakfast.length() > 0) {
+        if (mBreakfast.length() > 0 && mBreakfast.get(0) instanceof Recipe) {
             for (int i = 0; i < mBreakfast.length(); i++) {
                 Recipe recipe = (Recipe) mBreakfast.get(i);
                 mTvBreakfastMeals.setText(recipe.getName());
             }
         }
-        if (mLunch.length() > 0) {
+        if (mLunch.length() > 0 && mLunch.get(0) instanceof Recipe) {
             for (int i = 0; i < mLunch.length(); i++) {
                 Recipe recipe = (Recipe) mLunch.get(i);
                 mTvLunchMeals.setText(recipe.getName());
             }
         }
-        if (mDinner.length() > 0) {
+        if (mDinner.length() > 0 && mDinner.get(0) instanceof Recipe) {
             for (int i = 0; i < mDinner.length(); i++) {
                 Recipe recipe = (Recipe) mDinner.get(i);
                 mTvDinnerMeals.setText(recipe.getName());
@@ -193,9 +205,13 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         else { monthString = "" + month; }
         if (dayOfMonth < 10) { dayString = "0" + dayOfMonth; }
         else { dayString = "" + dayOfMonth; }
-        String date = monthString + "/" + dayString + "/" + year;
-        mTvDatePicker.setText(date);
+        mDateString = monthString + "/" + dayString + "/" + year;
+        mTvDatePicker.setText(mDateString);
 
+        mDateFromString(mDateString);
+    }
+
+    public void mDateFromString(String date) {
         try {
             mDate = new SimpleDateFormat("MM/dd/yyyy").parse(date);
             Log.i(TAG, mDate.toString());
@@ -204,11 +220,28 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         }
     }
 
-    public void submitMealPlan() {
-        if (mDate == null) {
+    public void saveRecipes(JSONArray recipes) throws JSONException {
+        for (int i = 0 ; i < recipes.length(); i++) {
+            Recipe recipe = (Recipe) recipes.get(i);
+            recipe.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(com.parse.ParseException e) {
+                    Log.i(TAG, recipe.getName() + " saved");
+                }
+            });
+        }
+    }
+
+    public void submitMealPlan() throws JSONException {
+        if (mDateString.isEmpty()) {
             Toast.makeText(getContext(), "Please select a date", Toast.LENGTH_SHORT).show();
             return;
         }
+        mDateFromString(mDateString);
+        mMealPlan = new MealPlan();
+        saveRecipes(mBreakfast);
+        saveRecipes(mLunch);
+        saveRecipes(mDinner);
         mMealPlan.setOwner(ParseUser.getCurrentUser());
         mMealPlan.setDayOf(mDate);
         mMealPlan.setBreakfast(mBreakfast);
@@ -229,6 +262,11 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
                 mTvBreakfastMeals.setText("");
                 mTvLunchMeals.setText("");
                 mTvDinnerMeals.setText("");
+                mBreakfast = new JSONArray();
+                mLunch = new JSONArray();
+                mDinner = new JSONArray();
+                mDateString = "";
+                mDate = null;
             }
         });
     }
@@ -278,12 +316,18 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         if (v.getId() == R.id.tvBreakfastMeals || v.getId() == R.id.tvLunchMeals || v.getId() == R.id.tvDinnerMeals) {
             Fragment fragment = new AddRecipeFragment();
             Bundle meal = new Bundle();
-            if (mDate != null) {
-                meal.putString("date", mTvDatePicker.getText().toString());
+            meal.putString("date", mTvDatePicker.getText().toString());
+//            meal.putString("breakfastArray", mBreakfast.toString());
+//            meal.putString("lunchArray", mLunch.toString());
+//            meal.putString("dinnerArray", mDinner.toString());
+            try {
+                meal.putString("breakfastArray", recipeToJsonObjectArray(mBreakfast).toString());
+                meal.putString("lunchArray", recipeToJsonObjectArray(mLunch).toString());
+                meal.putString("dinnerArray", recipeToJsonObjectArray(mDinner).toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            meal.putString("breakfastArray", mBreakfast.toString());
-            meal.putString("lunchArray", mLunch.toString());
-            meal.putString("dinnerArray", mDinner.toString());
+
             switch(v.getId()){
                 case R.id.tvBreakfastMeals:
                     meal.putString("meal", "breakfast");
@@ -299,5 +343,33 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
         }
+    }
+
+    public JSONArray recipeToJsonObjectArray(JSONArray recipes) throws JSONException {
+        JSONArray newRecipes = new JSONArray();
+        for(int i = 0; i < recipes.length(); i++) {
+            Recipe recipe = (Recipe) recipes.get(i);
+            newRecipes.put(recipe.toJsonObject());
+        }
+        return newRecipes;
+    }
+
+    public JSONArray jsonObjectToRecipeArray(JSONArray recipes) throws JSONException {
+        JSONArray newRecipes = new JSONArray();
+        for(int i = 0; i < recipes.length(); i++) {
+            JSONObject object = (JSONObject) recipes.get(i);
+            Recipe recipe = new Recipe();
+            recipe.setName(object.getString(Recipe.KEY_NAME));
+            recipe.setIngredients(object.getJSONArray(Recipe.KEY_INGREDIENTS));
+            recipe.setImageLink(object.getString(Recipe.KEY_IMAGE_LINK));
+            recipe.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(com.parse.ParseException e) {
+                    Log.i(TAG, recipe.getName() + " got saved");
+                }
+            });
+            newRecipes.put(recipe);
+        }
+        return newRecipes;
     }
 }
