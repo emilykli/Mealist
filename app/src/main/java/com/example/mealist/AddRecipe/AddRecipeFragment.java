@@ -147,6 +147,7 @@ public class AddRecipeFragment extends Fragment {
                 recipe.setIngredients(ingredients);
                 recipe.setName(recipeJson.getString("title"));
                 recipe.setImageLink(recipeJson.getString("image"));
+                recipe.setSpoonacularId(recipeId);
 
                 client.getIngredients(recipeId, new JsonHttpResponseHandler() {
                     @Override

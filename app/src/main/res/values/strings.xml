@@ -29,7 +29,8 @@
 
     <string name="sample_recipe_name">Pesto Yogurt Pasta</string>
     <string name="sample_recipe">22 g yogurt \n12 g pasta</string>
-    <string name="add_meal">Add Meal</string>
+    <string name="add_recipe">Add Recipe</string>
+    <string name="nutrition_info">Nutrition Info</string>
     <string name="favorite">Favorite</string>
 
 </resources>

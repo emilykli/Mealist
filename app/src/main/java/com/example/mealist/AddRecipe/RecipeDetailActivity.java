@@ -11,35 +11,45 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.mealist.Access.MainActivity;
+import com.example.mealist.Backend.SpoonacularClient;
 import com.example.mealist.MakeMealPlan.MakePlanFragment;
 import com.example.mealist.R;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Headers;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
     public static final String TAG = "RecipeDetailActivity";
 
-    final FragmentManager mFragmentManager = getSupportFragmentManager();
-
     private ImageView mIvRecipeImage;
     private TextView mTvRecipeName;
     private TextView mTvRecipeIngredients;
+    private TextView mTvNutritionInfo;
     private Button mBtnAdd;
 
     private Recipe mRecipe;
+
+    private SpoonacularClient mClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
-        Log.i(TAG, "oncreate");
+
+        mClient = new SpoonacularClient();
 
         if (getIntent().getExtras() != null) {
             mRecipe = (Recipe) getIntent().getParcelableExtra("recipe");
@@ -50,10 +60,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
             mTvRecipeName = findViewById(R.id.tvRecipeName);
             mTvRecipeName.setText(mRecipe.getName());
 
-            mTvRecipeIngredients = findViewById(R.id.tvRecipeIngredients);
+            mTvNutritionInfo = findViewById(R.id.tvNutritionInfo);
+            setNutrientText(mRecipe);
 
+            mTvRecipeIngredients = findViewById(R.id.tvRecipeIngredients);
             try {
-                Log.i(TAG, "hi");
                 setRecipeText(mRecipe);
             } catch (JSONException e) {
                 mTvRecipeIngredients.setText("error setting recipe text :(");
@@ -78,10 +89,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
     }
 
-    public void setRecipeText(Recipe recipe) throws JSONException {
+    private void setRecipeText(Recipe recipe) throws JSONException {
         String recipeText = "";
 
-        Log.i(TAG, "hello i am here now");
         List<Ingredient> ingredients = (ArrayList) recipe.get("ingredients");
 
         for (int i = 0; i < ingredients.size(); i++) {
@@ -93,6 +103,49 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         mTvRecipeIngredients.setText(recipeText);
 
+    }
+
+    private void setNutrientText(Recipe recipe) {
+        int recipeId = (int) recipe.getSpoonacularId();
+
+        mClient.getNutrients(recipeId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONObject jsonObject = json.jsonObject;
+
+                String nutrientInfo = "";
+
+                try {
+                    String calories = jsonObject.getString("calories");
+                    nutrientInfo += calories + "cal\n";
+                    recipe.setCalories(calories);
+
+                    String carbs = jsonObject.getString("carbs");
+                    nutrientInfo += carbs + " carbs\n";
+                    recipe.setCarbs(carbs);
+
+                    String fat = jsonObject.getString("fat");
+                    nutrientInfo += fat + " fat\n";
+                    recipe.setFat(fat);
+
+                    String protein = jsonObject.getString("protein");
+                    nutrientInfo += protein + " protein\n";
+                    recipe.setProtein(protein);
+
+                    mTvNutritionInfo.setText(nutrientInfo);
+
+                    recipe.saveInBackground();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Toast.makeText(RecipeDetailActivity.this, "Error retrieving nutrient information", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

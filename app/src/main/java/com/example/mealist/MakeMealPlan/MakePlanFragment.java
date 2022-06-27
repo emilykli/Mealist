@@ -346,12 +346,13 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
             recipe.setName(object.getString(Recipe.KEY_NAME));
             recipe.setIngredients(object.getJSONArray(Recipe.KEY_INGREDIENTS));
             recipe.setImageLink(object.getString(Recipe.KEY_IMAGE_LINK));
-            recipe.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(com.parse.ParseException e) {
-                    Log.i(TAG, recipe.getName() + " got saved");
-                }
-            });
+            recipe.setSpoonacularId(object.getInt(Recipe.KEY_SPOONACULAR_ID));
+            recipe.setCalories(object.getString(Recipe.KEY_CALORIES));
+            recipe.setCarbs(object.getString(Recipe.KEY_CARBS));
+            recipe.setFat(object.getString(Recipe.KEY_FAT));
+            recipe.setProtein(object.getString(Recipe.KEY_PROTEIN));
+
+            recipe.saveInBackground(e -> Log.i(TAG, recipe.getName() + " got saved"));
             newRecipes.put(recipe);
         }
         return newRecipes;

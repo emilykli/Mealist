@@ -71,7 +71,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(mContext, "Recipe clicked!", Toast.LENGTH_SHORT).show();
             final Recipe recipe = (Recipe) v.getTag();
             if (recipe != null) {
                 Intent i = new Intent(mContext, RecipeDetailActivity.class);

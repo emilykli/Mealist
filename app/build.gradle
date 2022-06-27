@@ -23,6 +23,7 @@ android {
         buildConfigField("String", "SERVER_URL", apikeyProperties['SERVER_URL'])
         buildConfigField("String", "SPOON_KEY_1", apikeyProperties['SPOON_KEY_1'])
         buildConfigField("String", "SPOON_KEY_2", apikeyProperties['SPOON_KEY_2'])
+        buildConfigField("String", "SPOON_KEY_3", apikeyProperties['SPOON_KEY_3'])
 
     }
 
