@@ -12,6 +12,7 @@
 
     <dimen name="date_ball_size">75dp</dimen>
     <dimen name="ball_vertical_margin">25dp</dimen>
+    <dimen name="day_at_a_glance_text">20sp</dimen>
 
     <dimen name="zero">0dp</dimen>
     <dimen name="date_margin">2dp</dimen>

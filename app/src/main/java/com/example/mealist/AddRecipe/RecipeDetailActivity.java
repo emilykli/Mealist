@@ -117,20 +117,25 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
                 try {
                     String calories = jsonObject.getString("calories");
-                    nutrientInfo += calories + "cal\n";
-                    recipe.setCalories(calories);
+                    calories = calories.replace("k", "");
+                    double numCals = Double.parseDouble(calories);
+                    nutrientInfo += calories + " cal\n";
+                    recipe.setCalories(numCals);
 
                     String carbs = jsonObject.getString("carbs");
                     nutrientInfo += carbs + " carbs\n";
-                    recipe.setCarbs(carbs);
+                    double gCarbs = Double.parseDouble(carbs.replace("g", ""));
+                    recipe.setCarbs(gCarbs);
 
                     String fat = jsonObject.getString("fat");
                     nutrientInfo += fat + " fat\n";
-                    recipe.setFat(fat);
+                    double gFat = Double.parseDouble(fat.replace("g", ""));
+                    recipe.setFat(gFat);
 
                     String protein = jsonObject.getString("protein");
                     nutrientInfo += protein + " protein\n";
-                    recipe.setProtein(protein);
+                    double gProtein = Double.parseDouble(protein.replace("g", ""));
+                    recipe.setProtein(gProtein);
 
                     mTvNutritionInfo.setText(nutrientInfo);
 

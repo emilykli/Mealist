@@ -48,35 +48,35 @@ public class Recipe extends ParseObject {
         put(KEY_SPOONACULAR_ID, id);
     }
 
-    public String getCalories() {
-        return getString(KEY_CALORIES);
+    public Number getCalories() {
+        return getNumber(KEY_CALORIES);
     }
 
-    public void setCalories(String calories) {
+    public void setCalories(Number calories) {
         put(KEY_CALORIES, calories);
     }
 
-    public String getCarbs() {
-        return getString(KEY_CARBS);
+    public Number getCarbs() {
+        return getNumber(KEY_CARBS);
     }
 
-    public void setCarbs(String carbs) {
+    public void setCarbs(Number carbs) {
         put(KEY_CARBS, carbs);
     }
 
-    public String getFat() {
-        return getString(KEY_FAT);
+    public Number getFat() {
+        return getNumber(KEY_FAT);
     }
 
-    public void setFat(String fat) {
+    public void setFat(Number fat) {
         put(KEY_FAT, fat);
     }
 
-    public String getProtein() {
-        return getString(KEY_PROTEIN);
+    public Number getProtein() {
+        return getNumber(KEY_PROTEIN);
     }
 
-    public void setProtein(String protein) {
+    public void setProtein(Number protein) {
         put(KEY_PROTEIN, protein);
     }
 

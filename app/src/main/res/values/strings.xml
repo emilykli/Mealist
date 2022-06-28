@@ -9,6 +9,12 @@
 
     <string name="sample_month">June</string>
     <string name="sample_day">21</string>
+    <string name="day_at_a_glance">Daily Meal Summary</string>
+    <string name="no_recipes_added">No Recipes Added</string>
+    <string name="total_calories">Total Calories (kcal):</string>
+    <string name="total_carbs">Total Carbohydrates (g):</string>
+    <string name="total_fat">Total Fat (g):</string>
+    <string name="total_protein">Total Protein (g):</string>
 
     <string name="dash">—</string>
     <string name="sample_start_range">June 19</string>

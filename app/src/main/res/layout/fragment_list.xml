@@ -7,36 +7,44 @@
     tools:context=".GroceryList.ListFragment">
 
     <LinearLayout
-        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tvStartDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/date_text_size"
             android:layout_margin="@dimen/date_margin"
-            tools:text="@string/sample_start_range"
-            />
+            android:textSize="@dimen/date_text_size"
+            tools:text="@string/sample_start_range" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/date_margin"
             android:text="@string/dash"
-            android:textSize="@dimen/date_text_size"
-            android:layout_margin="@dimen/date_margin"/>
+            android:textSize="@dimen/date_text_size" />
 
         <TextView
             android:id='@+id/tvEndDate'
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/date_text_size"
             android:layout_margin="@dimen/date_margin"
-            tools:text="@string/sample_end_range"/>
+            android:textSize="@dimen/date_text_size"
+            tools:text="@string/sample_end_range" />
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGroceryList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

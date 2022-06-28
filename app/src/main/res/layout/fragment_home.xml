@@ -7,6 +7,7 @@
     tools:context=".Home.HomeFragment">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvBall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/ball_vertical_margin"
@@ -23,8 +24,7 @@
             android:layout_height="@dimen/date_ball_size"
             android:background="@color/tart_orange"
             android:gravity="center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvDateMonth"
@@ -42,9 +42,199 @@
 
         </LinearLayout>
 
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvMealSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/day_at_a_glance"
+        android:textStyle="bold"
+        android:textSize="@dimen/day_at_a_glance_text"
+        android:layout_margin="@dimen/meal_padding_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cvBall" />
+
+    <TextView
+        android:id="@+id/tvBreakfastText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/breakfast"
+        android:layout_margin="@dimen/meal_padding_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMealSummary" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvBreakfast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="@dimen/add_meal_corner_radius"
+        app:cardElevation="0dp"
+        app:contentPadding="0dp"
+        android:layout_margin="@dimen/meal_padding_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBreakfastText">
+
+        <TextView
+            android:background="@color/blue_gray"
+            android:alpha="0.8"
+            android:id="@+id/tvBreakfastMeals"
+            android:padding="@dimen/meal_padding_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="4"
+            android:text="@string/no_recipes_added"
+            />
+
     </androidx.cardview.widget.CardView>
 
 
+    <TextView
+        android:id="@+id/tvLunchText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lunch"
+        android:layout_margin="@dimen/meal_padding_margin"
+        app:layout_constraintTop_toBottomOf="@id/cvBreakfast"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvLunch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="@dimen/add_meal_corner_radius"
+        app:cardElevation="0dp"
+        app:contentPadding="0dp"
+        android:layout_margin="@dimen/meal_padding_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLunchText">
+
+        <TextView
+            android:background="@color/mango_tango"
+            android:alpha="0.8"
+            android:id="@+id/tvLunchMeals"
+            android:padding="@dimen/meal_padding_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="4"
+            android:text="@string/no_recipes_added"
+            />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvDinnerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dinner"
+        android:layout_margin="@dimen/meal_padding_margin"
+        app:layout_constraintTop_toBottomOf="@id/cvLunch"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvDinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="@dimen/add_meal_corner_radius"
+        app:cardElevation="0dp"
+        app:contentPadding="0dp"
+        android:layout_margin="@dimen/meal_padding_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDinnerText">
+
+        <TextView
+            android:background="@color/corn"
+            android:alpha="0.8"
+            android:id="@+id/tvDinnerMeals"
+            android:padding="@dimen/meal_padding_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="4"
+            android:text="@string/no_recipes_added"
+            />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvTotalCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/meal_padding_margin"
+        android:text="@string/total_calories"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cvDinner" />
+
+    <TextView
+        android:id="@+id/tvTotalCarbs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/meal_padding_margin"
+        android:text="@string/total_carbs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTotalCalories" />
+
+    <TextView
+        android:id="@+id/tvTotalFat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/total_fat"
+        android:layout_margin="@dimen/meal_padding_margin"
+        app:layout_constraintTop_toBottomOf="@id/tvTotalCarbs"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tvTotalProtein"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/meal_padding_margin"
+        android:text="@string/total_protein"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTotalFat" />
+
+    <TextView
+        android:id="@+id/tvCalorieValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/meal_padding_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTotalCalories"
+        app:layout_constraintStart_toEndOf="@+id/tvTotalCalories"
+        app:layout_constraintTop_toTopOf="@+id/tvTotalCalories" />
+
+    <TextView
+        android:id="@+id/tvCarbValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/meal_padding_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTotalCarbs"
+        app:layout_constraintStart_toEndOf="@+id/tvTotalCarbs"
+        app:layout_constraintTop_toTopOf="@+id/tvTotalCarbs" />
+
+    <TextView
+        android:id="@+id/tvFatValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/meal_padding_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTotalFat"
+        app:layout_constraintStart_toEndOf="@+id/tvTotalFat"
+        app:layout_constraintTop_toTopOf="@+id/tvTotalFat" />
+
+    <TextView
+        android:id="@+id/tvProteinValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/meal_padding_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTotalProtein"
+        app:layout_constraintStart_toEndOf="@+id/tvTotalProtein"
+        app:layout_constraintTop_toTopOf="@+id/tvTotalProtein" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
