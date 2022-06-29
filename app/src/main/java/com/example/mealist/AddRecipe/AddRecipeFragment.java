@@ -153,11 +153,11 @@ public class AddRecipeFragment extends Fragment {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         JSONObject jsonObject = json.jsonObject;
+                        List<Ingredient> ingredients = new ArrayList<>();
                         try {
                             JSONArray unprocessedIngredients = jsonObject.getJSONArray("ingredients");
                             for (int i = 0; i < unprocessedIngredients.length(); i++) {
                                 JSONObject unprocessedIngredient = (JSONObject) unprocessedIngredients.get(i);
-                                String name = unprocessedIngredient.getString("name");
                                 Ingredient ingredient = new Ingredient();
                                 ingredient.setName(unprocessedIngredient.getString("name"));
                                 JSONObject metricAmount = unprocessedIngredient.getJSONObject("amount").getJSONObject("metric");
@@ -175,19 +175,19 @@ public class AddRecipeFragment extends Fragment {
                                         }
                                     }
                                 });
-                                recipe.add(Recipe.KEY_INGREDIENTS, ingredient);
-
-                                recipe.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e != null) {
-                                            Toast.makeText(getContext(), "error while saving", Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-                                    }
-                                });
+                                ingredients.add(ingredient);
 
                             }
+                            recipe.addAll(Recipe.KEY_INGREDIENTS, ingredients);
+                            recipe.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e != null) {
+                                        Toast.makeText(getContext(), "error while saving", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                }
+                            });
                         } catch (JSONException e) {
                             Log.e(TAG, "error getting ingredients array", e);
                         }

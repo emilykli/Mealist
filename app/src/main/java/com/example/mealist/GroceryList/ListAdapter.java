@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mealist.AddRecipe.Ingredient;
 import com.example.mealist.R;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 
 import java.util.List;
 
@@ -57,11 +59,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
 
         public void bind(Ingredient ingredient) {
-            try {
-                mCbListItem.setText("" + ingredient.fetchIfNeeded().get(Ingredient.KEY_NAME));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+                ingredient.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        mCbListItem.setText(ingredient.getName());
+                    }
+                });
         }
     }
 

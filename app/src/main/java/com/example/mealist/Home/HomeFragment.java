@@ -116,9 +116,15 @@ public class HomeFragment extends Fragment {
 
                 }
 
-                mTvBreakfastMeals.setText(breakfastText);
-                mTvLunchMeals.setText(lunchText);
-                mTvDinnerMeals.setText(dinnerText);
+                if (!breakfastText.isEmpty()) {
+                    mTvBreakfastMeals.setText(breakfastText);
+                }
+                if (!lunchText.isEmpty()) {
+                    mTvLunchMeals.setText(lunchText);
+                }
+                if (!dinnerText.isEmpty()) {
+                    mTvDinnerMeals.setText(dinnerText);
+                }
 
                 mTvCalorieValue.setText(mCalories + "");
                 mTvCarbValue.setText(mCarbs + "");

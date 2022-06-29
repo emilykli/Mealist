@@ -21,6 +21,7 @@ import com.example.mealist.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -112,9 +113,9 @@ public class ListFragment extends Fragment {
         Date startDate = Date.from(mStart.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date endDate = Date.from(mEnd.atStartOfDay(ZoneId.systemDefault()).toInstant());
         ParseQuery<MealPlan> mealQuery = ParseQuery.getQuery(MealPlan.class);
-        mealQuery.setLimit(2);
-        mealQuery.whereLessThanOrEqualTo("dayOf", endDate);
-        mealQuery.whereGreaterThanOrEqualTo("dayOf", startDate);
+        mealQuery.whereLessThanOrEqualTo(MealPlan.KEY_DAY_OF, endDate);
+        mealQuery.whereGreaterThanOrEqualTo(MealPlan.KEY_DAY_OF, startDate);
+        mealQuery.whereEqualTo(MealPlan.KEY_OWNER, ParseUser.getCurrentUser());
 
 
 
