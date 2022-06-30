@@ -43,10 +43,10 @@ public class HomeFragment extends Fragment {
 
     Date mDate;
 
-    int mCalories;
-    int mCarbs;
-    int mFat;
-    int mProtein;
+    double mCalories;
+    double mCarbs;
+    double mFat;
+    double mProtein;
 
     public HomeFragment() {
     }
@@ -141,10 +141,10 @@ public class HomeFragment extends Fragment {
             Recipe recipe = mealPlan.get(i);
             try {
                 result += recipe.fetchIfNeeded().getString(Recipe.KEY_NAME) + "\n";
-                mCalories += (int) recipe.getCalories();
-                mCarbs += (int) recipe.getCarbs();
-                mFat += (int) recipe.getFat();
-                mProtein += (int) recipe.getProtein();
+                mCalories += recipe.getCalories();
+                mCarbs += recipe.getCarbs();
+                mFat += recipe.getFat();
+                mProtein += recipe.getProtein();
             }
             catch (Exception exception) {
                 Log.e(TAG, exception.toString());

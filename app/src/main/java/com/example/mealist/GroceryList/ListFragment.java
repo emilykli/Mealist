@@ -43,7 +43,6 @@ public class ListFragment extends Fragment {
     public List<Ingredient> mAllIngredients;
 
 
-    // TODO: fix lag :(
     long startTime;
     long startQuery;
     long finishQuery;
@@ -63,7 +62,6 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list, container, false);
     }
 
@@ -119,32 +117,29 @@ public class ListFragment extends Fragment {
 
 
 
-        mealQuery.findInBackground(new FindCallback<MealPlan>() {
-            @Override
-            public void done(List<MealPlan> plans, ParseException e) {
-                finishQuery = System.currentTimeMillis();
-                Log.i("time", "finish query: "+  (finishQuery - startQuery));
-                if (e != null) {
-                    Log.e(TAG, "issue with getting meal plans", e);
-                    return;
+        mealQuery.findInBackground((plans, e) -> {
+            finishQuery = System.currentTimeMillis();
+            Log.i("time", "finish query: "+  (finishQuery - startQuery));
+            if (e != null) {
+                Log.e(TAG, "issue with getting meal plans", e);
+                return;
+            }
+
+            for (MealPlan plan : plans) {
+                List<Recipe> breakfast = (ArrayList) plan.get(MealPlan.KEY_BREAKFAST);
+                List<Recipe> lunch = (ArrayList) plan.get(MealPlan.KEY_LUNCH);
+                List<Recipe> dinner = (ArrayList) plan.get(MealPlan.KEY_DINNER);
+
+                try {
+                    addIngredientsToList(breakfast);
+                    addIngredientsToList(lunch);
+                    addIngredientsToList(dinner);
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
                 }
 
-                for (MealPlan plan : plans) {
-                    List<Recipe> breakfast = (ArrayList) plan.get(MealPlan.KEY_BREAKFAST);
-                    List<Recipe> lunch = (ArrayList) plan.get(MealPlan.KEY_LUNCH);
-                    List<Recipe> dinner = (ArrayList) plan.get(MealPlan.KEY_DINNER);
-
-                    try {
-                        addIngredientsToList(breakfast);
-                        addIngredientsToList(lunch);
-                        addIngredientsToList(dinner);
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
-
-                    addIngredients = System.currentTimeMillis();
-                    Log.i("time", "finish adding ingredients: " + (addIngredients - finishQuery));
-                }
+                addIngredients = System.currentTimeMillis();
+                Log.i("time", "finish adding ingredients: " + (addIngredients - finishQuery));
             }
         });
     }
@@ -156,8 +151,6 @@ public class ListFragment extends Fragment {
                 mAllIngredients.add(ingredient);
                 mAdapter.notifyItemInserted(mAllIngredients.size() - 1);
             }
-//            mAllIngredients.addAll(ingredients);
-//            mAdapter.notifyDataSetChanged();
         }
     }
 }

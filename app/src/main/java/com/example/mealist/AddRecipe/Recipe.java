@@ -19,6 +19,7 @@ public class Recipe extends ParseObject {
     public static final String KEY_CARBS = "carbs";
     public static final String KEY_FAT = "fat";
     public static final String KEY_PROTEIN = "protein";
+    public static final String KEY_INSTRUCTIONS = "instructions";
 
     public String getName() {
         return getString(KEY_NAME);
@@ -48,36 +49,44 @@ public class Recipe extends ParseObject {
         put(KEY_SPOONACULAR_ID, id);
     }
 
-    public Number getCalories() {
-        return getNumber(KEY_CALORIES);
+    public double getCalories() {
+        return (double) getNumber(KEY_CALORIES);
     }
 
     public void setCalories(Number calories) {
         put(KEY_CALORIES, calories);
     }
 
-    public Number getCarbs() {
-        return getNumber(KEY_CARBS);
+    public double getCarbs() {
+        return (double) getNumber(KEY_CARBS);
     }
 
     public void setCarbs(Number carbs) {
         put(KEY_CARBS, carbs);
     }
 
-    public Number getFat() {
-        return getNumber(KEY_FAT);
+    public double getFat() {
+        return (double) getNumber(KEY_FAT);
     }
 
     public void setFat(Number fat) {
         put(KEY_FAT, fat);
     }
 
-    public Number getProtein() {
-        return getNumber(KEY_PROTEIN);
+    public double getProtein() {
+        return (double) getNumber(KEY_PROTEIN);
     }
 
     public void setProtein(Number protein) {
         put(KEY_PROTEIN, protein);
+    }
+
+    public String getInstructions() {
+        return getString(KEY_INSTRUCTIONS);
+    }
+
+    public void setInstructions(String instructions) {
+        put(KEY_INSTRUCTIONS, instructions);
     }
 
     public JSONObject toJsonObject() throws JSONException {

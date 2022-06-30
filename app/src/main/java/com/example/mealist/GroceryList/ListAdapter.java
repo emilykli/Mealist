@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
@@ -23,10 +26,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private Context mContext;
     private List<Ingredient> mIngredients;
 
+    private List<Integer> mCheckedIngredientPositions = new ArrayList<>();
+
 
     protected ListAdapter(Context context, List<Ingredient> ingredients) {
         mContext = context;
         mIngredients = ingredients;
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        holder.mCbListItem.setOnCheckedChangeListener(null);
+        super.onViewRecycled(holder);
     }
 
     @NonNull
@@ -41,6 +52,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         Ingredient ingredient = mIngredients.get(position);
         holder.itemView.setTag(ingredient);
         holder.bind(ingredient);
+
     }
 
     @Override
@@ -49,22 +61,36 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     }
 
     // TODO: add onclicklistener
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements CheckBox.OnCheckedChangeListener{
 
         private CheckBox mCbListItem;
+        private TextView mTvListItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mCbListItem = itemView.findViewById(R.id.cbListItem);
+            mTvListItem = itemView.findViewById(R.id.tvListItem);
         }
 
         public void bind(Ingredient ingredient) {
                 ingredient.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
-                        mCbListItem.setText(ingredient.getName());
+                        mTvListItem.setText(ingredient.getName());
                     }
                 });
+        }
+
+
+        @Override
+        public void onCheckedChanged(CompoundButton checkBox, boolean isChecked) {
+            Log.i("checked", mCheckedIngredientPositions.toString());
+            if (checkBox.isChecked()) {
+                final Ingredient ingredient = (Ingredient) checkBox.getTag();
+                int index = mIngredients.indexOf(ingredient);
+                mCheckedIngredientPositions.add(index);
+                Log.i("checked", index + "");
+            }
         }
     }
 

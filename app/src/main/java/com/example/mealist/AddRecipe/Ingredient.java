@@ -9,6 +9,7 @@ public class Ingredient extends ParseObject{
     public static final String KEY_NAME = "name";
     public static final String KEY_QUANTITY = "quantity";
     public static final String KEY_UNIT = "unit";
+    public static final String KEY_AISLE = "aisle";
 
     public String getName() {
         return getString(KEY_NAME);
@@ -32,6 +33,14 @@ public class Ingredient extends ParseObject{
 
     public void setUnit(String unit) {
         put(KEY_UNIT, unit);
+    }
+
+    public String getAisle() {
+        return getString(KEY_AISLE);
+    }
+
+    public void setAisle(String aisle) {
+        put(KEY_AISLE, aisle);
     }
 
 }

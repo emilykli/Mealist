@@ -11,6 +11,7 @@ public class SpoonacularClient extends AsyncHttpClient {
     public static final String RECIPE_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/complexSearch?apiKey=%s", API_KEY);
     public static final String INGREDIENTS_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/{id}/ingredientWidget.json?apiKey=%s", API_KEY);
     public static final String NUTRIENT_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/{id}/nutritionWidget.json?apiKey=%s", API_KEY);
+    public static final String RECIPE_INFO_URL = String.format("https://api.spoonacular.com/recipes/{id}/information?includeNutrition=true&apiKey=%s", API_KEY);
 
     public SpoonacularClient() {
         super();
@@ -21,6 +22,20 @@ public class SpoonacularClient extends AsyncHttpClient {
         params.put("query", query);
         params.put("number", 1);
         get(RECIPE_SEARCH_URL, params, handler);
+    }
+
+    /**
+     * Uses "Get Recipe Information" endpoint, has all of the functions of
+     * getIngredients and getNutrients (as well as getting the link to the recipe instructions
+     * and the grocery store "aisle" (ex. produce, vegetables) for each ingredient
+     * Takes up less API call "points" overall than the 2 other functions
+     * @param id
+     * @param handler
+     */
+    public void getRecipeInformation(int id, JsonHttpResponseHandler handler) {
+        String id_string = String.valueOf(id);
+        String url = RECIPE_INFO_URL.replace("{id}", id_string);
+        get(url, handler);
     }
 
     public void getIngredients(int id, JsonHttpResponseHandler handler) {

@@ -92,7 +92,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private void setRecipeText(Recipe recipe) throws JSONException {
         String recipeText = "";
 
-        List<Ingredient> ingredients = (ArrayList) recipe.get("ingredients");
+        List<Ingredient> ingredients = (ArrayList) recipe.get(Recipe.KEY_INGREDIENTS);
 
         for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = (Ingredient) ingredients.get(i);
@@ -106,51 +106,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void setNutrientText(Recipe recipe) {
-        int recipeId = (int) recipe.getSpoonacularId();
+        String nutrientText = "";
+        nutrientText += recipe.getCalories() + " kcal\n";
+        nutrientText += recipe.getCarbs() + " g\n";
+        nutrientText += recipe.getFat() + " g\n";
+        nutrientText += recipe.getProtein() + " g";
+        mTvNutritionInfo.setText(nutrientText);
 
-        mClient.getNutrients(recipeId, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                JSONObject jsonObject = json.jsonObject;
-
-                String nutrientInfo = "";
-
-                try {
-                    String calories = jsonObject.getString("calories");
-                    calories = calories.replace("k", "");
-                    double numCals = Double.parseDouble(calories);
-                    nutrientInfo += calories + " cal\n";
-                    recipe.setCalories(numCals);
-
-                    String carbs = jsonObject.getString("carbs");
-                    nutrientInfo += carbs + " carbs\n";
-                    double gCarbs = Double.parseDouble(carbs.replace("g", ""));
-                    recipe.setCarbs(gCarbs);
-
-                    String fat = jsonObject.getString("fat");
-                    nutrientInfo += fat + " fat\n";
-                    double gFat = Double.parseDouble(fat.replace("g", ""));
-                    recipe.setFat(gFat);
-
-                    String protein = jsonObject.getString("protein");
-                    nutrientInfo += protein + " protein\n";
-                    double gProtein = Double.parseDouble(protein.replace("g", ""));
-                    recipe.setProtein(gProtein);
-
-                    mTvNutritionInfo.setText(nutrientInfo);
-
-                    recipe.saveInBackground();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Toast.makeText(RecipeDetailActivity.this, "Error retrieving nutrient information", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 }

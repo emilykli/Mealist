@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -143,42 +142,59 @@ public class AddRecipeFragment extends Fragment {
 
                 int recipeId = recipeJson.getInt("id");
 
-                JSONArray ingredients = new JSONArray();
-                recipe.setIngredients(ingredients);
                 recipe.setName(recipeJson.getString("title"));
                 recipe.setImageLink(recipeJson.getString("image"));
                 recipe.setSpoonacularId(recipeId);
 
-                client.getIngredients(recipeId, new JsonHttpResponseHandler() {
+                client.getRecipeInformation(recipeId, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         JSONObject jsonObject = json.jsonObject;
                         List<Ingredient> ingredients = new ArrayList<>();
                         try {
-                            JSONArray unprocessedIngredients = jsonObject.getJSONArray("ingredients");
-                            for (int i = 0; i < unprocessedIngredients.length(); i++) {
-                                JSONObject unprocessedIngredient = (JSONObject) unprocessedIngredients.get(i);
+                            JSONArray extendedIngredients = jsonObject.getJSONArray("extendedIngredients");
+                            for(int i = 0; i < extendedIngredients.length(); i++) {
+                                JSONObject extendedIngredient = (JSONObject) extendedIngredients.get(i);
                                 Ingredient ingredient = new Ingredient();
-                                ingredient.setName(unprocessedIngredient.getString("name"));
-                                JSONObject metricAmount = unprocessedIngredient.getJSONObject("amount").getJSONObject("metric");
-                                ingredient.setQuantity(metricAmount.getDouble("value"));
-                                String unit = metricAmount.getString("unit");
+                                ingredient.setName(extendedIngredient.getString("name"));
+                                ingredient.setQuantity((Number) extendedIngredient.get("amount"));
+                                String unit = extendedIngredient.getString("unit");
                                 if (unit.isEmpty()) {
                                     unit = "(whole)";
                                 }
                                 ingredient.setUnit(unit);
-                                ingredient.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e != null) {
-                                            Toast.makeText(getContext(), "error getting singular ingredient", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                                ingredients.add(ingredient);
+                                ingredient.setAisle(extendedIngredient.getString("aisle"));
 
+                                ingredients.add(ingredient);
                             }
+                            Ingredient.saveAllInBackground(ingredients, e -> {
+                                if (e != null) {
+                                    Log.e(TAG, "saving all ingredients failed");
+                                }
+                            });
+
                             recipe.addAll(Recipe.KEY_INGREDIENTS, ingredients);
+
+                            recipe.setInstructions(jsonObject.getString("sourceUrl"));
+
+                            JSONArray nutrients = (JSONArray) ((JSONObject) jsonObject.getJSONObject("nutrition")).getJSONArray("nutrients");
+                            for(int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {
+                                JSONObject nutrient = (JSONObject) nutrients.get(nutrientIndex);
+                                String name = nutrient.getString("name");
+                                if (name.equals("Calories")) {
+                                    recipe.setCalories(nutrient.getDouble("amount"));
+                                }
+                                else if (name.equals("Fat")){
+                                    recipe.setFat(nutrient.getDouble("amount"));
+                                }
+                                else if (name.equals("Carbohydrates")) {
+                                    recipe.setCarbs(nutrient.getDouble("amount"));
+                                }
+                                else if (name.equals("Protein")) {
+                                    recipe.setProtein(nutrient.getDouble("amount"));
+                                }
+                            }
+
                             recipe.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
@@ -188,16 +204,18 @@ public class AddRecipeFragment extends Fragment {
                                     }
                                 }
                             });
+
                         } catch (JSONException e) {
-                            Log.e(TAG, "error getting ingredients array", e);
+                            e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Log.e(TAG, "error getting ingredients" + response, throwable);
+
                     }
                 });
+
                 mRecipes.add(recipe);
                 mAdapter.notifyItemInserted(mRecipes.size() - 1);
             }
