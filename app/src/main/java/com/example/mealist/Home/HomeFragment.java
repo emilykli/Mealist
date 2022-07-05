@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mealist.AddRecipe.Recipe;
+import com.example.mealist.GroceryList.HomeDialogFragment;
 import com.example.mealist.MakeMealPlan.MealPlan;
 import com.example.mealist.R;
 import com.parse.FindCallback;
@@ -26,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "HomeFragment";
 
     TextView mTvDateMonth;
@@ -40,6 +43,7 @@ public class HomeFragment extends Fragment {
     TextView mTvCarbValue;
     TextView mTvFatValue;
     TextView mTvProteinValue;
+
 
     Date mDate;
 
@@ -74,6 +78,8 @@ public class HomeFragment extends Fragment {
         mTvBreakfastMeals = view.findViewById(R.id.tvBreakfastMeals);
         mTvLunchMeals = view.findViewById(R.id.tvLunchMeals);
         mTvDinnerMeals = view.findViewById(R.id.tvDinnerMeals);
+
+        setMealOnClickListeners();
 
         mTvCalorieValue = view.findViewById(R.id.tvCalorieValue);
         mTvCarbValue = view.findViewById(R.id.tvCarbValue);
@@ -154,5 +160,24 @@ public class HomeFragment extends Fragment {
         return result;
     }
 
+    public void setMealOnClickListeners() {
+        mTvBreakfastMeals.setOnClickListener(this);
+        mTvLunchMeals.setOnClickListener(this);
+        mTvDinnerMeals.setOnClickListener(this);
+    }
 
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.tvBreakfastMeals || v.getId() == R.id.tvLunchMeals || v.getId() == R.id.tvDinnerMeals) {
+            launchHomeDialogFragment();
+            }
+    }
+
+    public void launchHomeDialogFragment() {
+        FragmentManager fm = getFragmentManager();
+        HomeDialogFragment homeDialogFragment = HomeDialogFragment.newInstance("meal");
+        homeDialogFragment.setTargetFragment(HomeFragment.this, 300);
+        homeDialogFragment.show(fm, "fragment_edit_name");
+    }
 }

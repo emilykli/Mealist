@@ -244,7 +244,6 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
                     return;
                 }
                 Toast.makeText(getContext(), "Meal plan saved successfully", Toast.LENGTH_SHORT).show();
-//                Log.i(TAG, "meal plan saved");
                 mTvDatePicker.setText("");
                 mTvBreakfastMeals.setText("");
                 mTvLunchMeals.setText("");

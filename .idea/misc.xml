@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/layout/fragment_add.xml" value="0.31856994628906254" />
         <entry key="app/src/main/res/layout/fragment_add_recipe.xml" value="0.25717875162760406" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.49329833984375004" />
+        <entry key="app/src/main/res/layout/fragment_home_dialog.xml" value="0.2635416666666667" />
         <entry key="app/src/main/res/layout/fragment_list.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/layout/fragment_make_plan.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/layout/item_list_ingredient.xml" value="0.3078125" />

@@ -73,10 +73,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
 
         public void bind(Ingredient ingredient) {
+            long start = System.currentTimeMillis();
                 ingredient.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         mTvListItem.setText(ingredient.getName());
+                        long time_elapsed = System.currentTimeMillis() - start;
+                        Log.i("time", "time for each bind: " + time_elapsed);
                     }
                 });
         }

@@ -22,6 +22,9 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import org.json.JSONArray;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -83,7 +86,8 @@ public class ListFragment extends Fragment {
         mRvGroceryList.setAdapter(mAdapter);
         mRvGroceryList.setLayoutManager(linearLayoutManager);
 
-        queryMealPlans();
+        queryGroceryList();
+//        queryMealPlans();
     }
 
     private void setStartEndDates() {
@@ -103,6 +107,41 @@ public class ListFragment extends Fragment {
 
         mTvStartDate.setText(start.getMonth().toString() + " " + start.getDayOfMonth());
         mTvEndDate.setText(end.getMonth().toString() + " " + end.getDayOfMonth());
+    }
+
+    private void queryGroceryList() {
+        startQuery = System.currentTimeMillis();
+
+        Date startDate = Date.from(mStart.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(mEnd.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        ParseQuery<GroceryList> listQuery = ParseQuery.getQuery(GroceryList.class);
+        listQuery.whereEqualTo(GroceryList.KEY_OWNER, ParseUser.getCurrentUser());
+        listQuery.whereEqualTo(GroceryList.KEY_END_DATE, endDate);
+        listQuery.whereEqualTo(GroceryList.KEY_START_DATE, startDate);
+        listQuery.setLimit(1);
+
+        listQuery.findInBackground(new FindCallback<GroceryList>() {
+            @Override
+            public void done(List<GroceryList> lists, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "issue with getting grocery list");
+                    return;
+                }
+                if (lists.size() == 0) {
+                    queryMealPlans();
+                    return;
+                }
+
+
+                GroceryList myList = lists.get(0);
+                mAllIngredients = myList.getIngredients();
+                mAdapter.clear();
+                mAdapter.addAll(mAllIngredients);
+                mAdapter.notifyDataSetChanged();
+                addIngredients = System.currentTimeMillis();
+                Log.i("time", "finish adding everything: " + (addIngredients - startTime));
+            }
+        });
     }
 
     private void queryMealPlans() {
@@ -141,6 +180,22 @@ public class ListFragment extends Fragment {
                 addIngredients = System.currentTimeMillis();
                 Log.i("time", "finish adding ingredients: " + (addIngredients - finishQuery));
             }
+            GroceryList list = new GroceryList();
+            list.setOwner(ParseUser.getCurrentUser());
+            list.setStartDate(startDate);
+            list.setEndDate(endDate);
+            JSONArray ingredients = new JSONArray();
+            for (Ingredient ingredient: mAllIngredients) {
+                ingredients.put(ingredient);
+            }
+            Log.i(TAG, (ingredients).toString());
+            list.setIngredients(ingredients);
+            list.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    Log.i(TAG, "done saving grocery list");
+                }
+            });
         });
     }
 
