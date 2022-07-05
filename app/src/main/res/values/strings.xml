@@ -32,13 +32,12 @@
     <string name="generic_meal">meal</string>
     <string name="search">Search</string>
     <string name="search_hint">Search recipe by name</string>
+    <string name="no_recipes_found">No recipes found</string>
 
     <string name="sample_recipe_name">Pesto Yogurt Pasta</string>
     <string name="sample_recipe">22 g yogurt \n12 g pasta</string>
     <string name="add_recipe">Add Recipe</string>
     <string name="nutrition_info">Nutrition Info</string>
     <string name="favorite">Favorite</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

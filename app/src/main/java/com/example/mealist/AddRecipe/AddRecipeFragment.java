@@ -37,6 +37,7 @@ public class AddRecipeFragment extends Fragment {
     public static final String TAG = "AddRecipeFragment";
 
     private TextView mTvMealName;
+    private TextView mTvNoRecipes;
 
     protected static String mMealTime;
     protected static String mBreakfast;
@@ -83,6 +84,8 @@ public class AddRecipeFragment extends Fragment {
 
         client = new SpoonacularClient();
 
+        mTvNoRecipes = view.findViewById(R.id.tvNoRecipes);
+
         mTvMealName = view.findViewById(R.id.tvMealName);
         mTvMealName.setText(mMealName);
 
@@ -113,6 +116,7 @@ public class AddRecipeFragment extends Fragment {
                     return;
                 }
                 mPbLoading.setVisibility(ProgressBar.VISIBLE);
+                mTvNoRecipes.setVisibility(TextView.INVISIBLE);
                 client.getRecipes(searchQuery, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -120,6 +124,9 @@ public class AddRecipeFragment extends Fragment {
                         mAdapter.clear();
                         addRecipes(jsonObject);
                         mPbLoading.setVisibility(ProgressBar.INVISIBLE);
+                        if (mRecipes.size() == 0) {
+                            mTvNoRecipes.setVisibility(TextView.VISIBLE);
+                        }
                     }
 
                     @Override
@@ -128,7 +135,6 @@ public class AddRecipeFragment extends Fragment {
                     }
                 });
                 mEtRecipeSearch.setText("");
-
             }
         });
     }

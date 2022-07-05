@@ -7,7 +7,7 @@ import com.example.mealist.BuildConfig;
 
 public class SpoonacularClient extends AsyncHttpClient {
 
-    public static final String API_KEY = BuildConfig.SPOON_KEY_2;
+    public static final String API_KEY = BuildConfig.SPOON_KEY_1;
     public static final String RECIPE_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/complexSearch?apiKey=%s", API_KEY);
     public static final String INGREDIENTS_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/{id}/ingredientWidget.json?apiKey=%s", API_KEY);
     public static final String NUTRIENT_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/{id}/nutritionWidget.json?apiKey=%s", API_KEY);

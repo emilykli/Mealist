@@ -1,11 +1,10 @@
-package com.example.mealist.GroceryList;
+package com.example.mealist.Home;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mealist.R;
-
-import java.util.ArrayList;
 
 public class HomeDialogFragment extends DialogFragment {
 
@@ -26,10 +23,11 @@ public class HomeDialogFragment extends DialogFragment {
     }
 
     // TODO: pass around recipes agaiñ :\
-    public static HomeDialogFragment newInstance(String mealTime) {
+    public static HomeDialogFragment newInstance(String mealTime, String mealInfo) {
         HomeDialogFragment fragment = new HomeDialogFragment();
         Bundle args = new Bundle();
         args.putString("mealTime", mealTime);
+        args.putString("mealInfo", mealInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,9 +47,9 @@ public class HomeDialogFragment extends DialogFragment {
         mTvMealInfo = (TextView) view.findViewById(R.id.tvMealInfo);
 
         String mealTime = getArguments().getString("mealTime", "No Meal Selected");
-        getDialog().setTitle(mealTime);
-
-        mTvMealInfo.requestFocus();
+        String mealInfo = getArguments().getString("mealInfo", "No meals added");
+        mTvMealTime.setText(mealTime);
+        mTvMealInfo.setText(mealInfo);
     }
 
     @Override

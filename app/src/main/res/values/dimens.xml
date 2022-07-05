@@ -24,4 +24,7 @@
     <dimen name="recipe_picker_margin">5dp</dimen>
     <dimen name="recipe_preview_width">210dp</dimen>
     <dimen name="recipe_preview_height">140dp</dimen>
+
+    <dimen name="dialog_fragment_width">300dp</dimen>
+    <dimen name="dialog_fragment_padding">15dp</dimen>
 </resources>
