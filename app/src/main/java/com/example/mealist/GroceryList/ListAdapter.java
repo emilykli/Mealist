@@ -26,9 +26,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private Context mContext;
     private List<Ingredient> mIngredients;
 
-    private List<Integer> mCheckedIngredientPositions = new ArrayList<>();
-
-
     protected ListAdapter(Context context, List<Ingredient> ingredients) {
         mContext = context;
         mIngredients = ingredients;
@@ -36,7 +33,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
-        holder.mCbListItem.setOnCheckedChangeListener(null);
         super.onViewRecycled(holder);
     }
 
@@ -60,7 +56,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         return mIngredients.size();
     }
 
-    // TODO: add onclicklistener
     class ViewHolder extends RecyclerView.ViewHolder implements CheckBox.OnCheckedChangeListener{
 
         private CheckBox mCbListItem;
@@ -69,6 +64,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mCbListItem = itemView.findViewById(R.id.cbListItem);
+            mCbListItem.setOnCheckedChangeListener(this);
             mTvListItem = itemView.findViewById(R.id.tvListItem);
         }
 
@@ -78,6 +74,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         mTvListItem.setText(ingredient.getName());
+                        mCbListItem.setTag(ingredient);
+                        if (ingredient.getChecked()) {
+                            mCbListItem.setChecked(true);
+                        }
+                        else {
+                            mCbListItem.setChecked(false);
+                        }
                         long time_elapsed = System.currentTimeMillis() - start;
                         Log.i("time", "time for each bind: " + time_elapsed);
                     }
@@ -87,13 +90,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         @Override
         public void onCheckedChanged(CompoundButton checkBox, boolean isChecked) {
-            Log.i("checked", mCheckedIngredientPositions.toString());
-            if (checkBox.isChecked()) {
-                final Ingredient ingredient = (Ingredient) checkBox.getTag();
-                int index = mIngredients.indexOf(ingredient);
-                mCheckedIngredientPositions.add(index);
-                Log.i("checked", index + "");
+            Ingredient ingredient = (Ingredient) checkBox.getTag();
+            if(checkBox.isChecked()) {
+                ingredient.setChecked(true);
             }
+            else {
+                ingredient.setChecked(false);
+            }
+            ingredient.saveInBackground();
         }
     }
 

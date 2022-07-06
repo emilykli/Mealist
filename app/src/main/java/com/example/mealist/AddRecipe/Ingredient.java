@@ -10,6 +10,7 @@ public class Ingredient extends ParseObject{
     public static final String KEY_QUANTITY = "quantity";
     public static final String KEY_UNIT = "unit";
     public static final String KEY_AISLE = "aisle";
+    public static final String KEY_IS_CHECKED = "isChecked";
 
     public String getName() {
         return getString(KEY_NAME);
@@ -42,5 +43,9 @@ public class Ingredient extends ParseObject{
     public void setAisle(String aisle) {
         put(KEY_AISLE, aisle);
     }
+
+    public boolean getChecked() { return getBoolean(KEY_IS_CHECKED); }
+
+    public void setChecked(boolean isChecked) { put(KEY_IS_CHECKED, isChecked); }
 
 }
