@@ -17,12 +17,14 @@
 
     <TextView
         android:id="@+id/tvRecipeName"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_margin="@dimen/recipe_picker_margin"
-        tools:text="@string/sample_recipe_name"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivRecipeImage"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="wrap"
+        tools:text="@string/sample_recipe_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>
