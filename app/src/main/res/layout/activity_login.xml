@@ -17,12 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         >
-<!--        <ImageView-->
-<!--            android:id="@+id/ivLogo"-->
-<!--            android:layout_width="@dimen/logo_size"-->
-<!--            android:layout_height="@dimen/logo_size"-->
-<!--            android:layout_marginHorizontal="@dimen/signup_words_margin"-->
-<!--            app:srcCompat="@drawable/icon" />-->
 
         <TextView
             android:id="@+id/tvLogin"

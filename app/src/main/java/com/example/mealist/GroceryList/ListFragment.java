@@ -52,9 +52,7 @@ public class ListFragment extends Fragment {
     long addIngredients;
 
 
-    public ListFragment() {
-        // Required empty public constructor
-    }
+    public ListFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +85,6 @@ public class ListFragment extends Fragment {
         mRvGroceryList.setLayoutManager(linearLayoutManager);
 
         queryGroceryList();
-//        queryMealPlans();
     }
 
     private void setStartEndDates() {

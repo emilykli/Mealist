@@ -350,6 +350,7 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
             recipe.setCarbs(object.getDouble(Recipe.KEY_CARBS));
             recipe.setFat(object.getDouble(Recipe.KEY_FAT));
             recipe.setProtein(object.getDouble(Recipe.KEY_PROTEIN));
+            recipe.setInstructions(object.getString(Recipe.KEY_INSTRUCTIONS));
 
             recipe.saveInBackground(e -> Log.i(TAG, recipe.getName() + " got saved"));
             newRecipes.put(recipe);

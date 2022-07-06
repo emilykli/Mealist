@@ -99,6 +99,7 @@ public class Recipe extends ParseObject {
         jsonRecipe.put(KEY_CARBS, getCarbs());
         jsonRecipe.put(KEY_FAT, getFat());
         jsonRecipe.put(KEY_PROTEIN, getProtein());
+        jsonRecipe.put(KEY_INSTRUCTIONS, getInstructions());
         return jsonRecipe;
     }
 
