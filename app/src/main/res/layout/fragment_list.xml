@@ -86,8 +86,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvGroceryList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/list_margin"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/list_margin"
+        android:layout_marginTop="@dimen/list_box_height"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cvDates" />

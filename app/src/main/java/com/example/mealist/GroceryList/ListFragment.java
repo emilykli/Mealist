@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.mealist.AddRecipe.Ingredient;
@@ -32,11 +33,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ListFragment extends Fragment {
+public class ListFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "ListFragment";
 
     private TextView mTvStartDate;
     private TextView mTvEndDate;
+
+    private ImageButton mBtnLeft;
+    private ImageButton mBtnRight;
 
     private LocalDate mStart;
     private LocalDate mEnd;
@@ -76,15 +80,40 @@ public class ListFragment extends Fragment {
         mTvEndDate = view.findViewById(R.id.tvEndDate);
         setStartEndDates();
 
-        mRvGroceryList = view.findViewById(R.id.rvGroceryList);
-        mAllIngredients = new ArrayList<>();
-        mAdapter = new ListAdapter(getContext(), mAllIngredients);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mBtnLeft = view.findViewById(R.id.btnLeft);
+        mBtnRight = view.findViewById(R.id.btnRight);
+        setButtonOnClickListeners();
 
-        mRvGroceryList.setAdapter(mAdapter);
-        mRvGroceryList.setLayoutManager(linearLayoutManager);
+        mRvGroceryList = view.findViewById(R.id.rvGroceryList);
+
+        resetRecyclerView();
 
         queryGroceryList();
+    }
+
+    private void setButtonOnClickListeners() {
+        mBtnLeft.setOnClickListener(this);
+        mBtnRight.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnLeft:
+                mEnd = mStart.minusDays(1);
+                mStart = mStart.minusDays(7);
+                break;
+            case R.id.btnRight:
+                mStart = mEnd.plusDays(1);
+                mEnd = mEnd.plusDays(7);
+                break;
+        }
+        mTvStartDate.setText(mStart.getMonth().toString() + " " + mStart.getDayOfMonth());
+        mTvEndDate.setText(mEnd.getMonth().toString() + " " + mEnd.getDayOfMonth());
+
+        resetRecyclerView();
+        queryGroceryList();
+
     }
 
     private void setStartEndDates() {
@@ -106,11 +135,21 @@ public class ListFragment extends Fragment {
         mTvEndDate.setText(end.getMonth().toString() + " " + end.getDayOfMonth());
     }
 
+    private void resetRecyclerView() {
+        mAllIngredients = new ArrayList<>();
+        mAdapter = new ListAdapter(getContext(), mAllIngredients);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+
+        mRvGroceryList.setAdapter(mAdapter);
+        mRvGroceryList.setLayoutManager(linearLayoutManager);
+    }
+
     private void queryGroceryList() {
         startQuery = System.currentTimeMillis();
 
         Date startDate = Date.from(mStart.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date endDate = Date.from(mEnd.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
         ParseQuery<GroceryList> listQuery = ParseQuery.getQuery(GroceryList.class);
         listQuery.whereEqualTo(GroceryList.KEY_OWNER, ParseUser.getCurrentUser());
         listQuery.whereEqualTo(GroceryList.KEY_END_DATE, endDate);
@@ -146,12 +185,11 @@ public class ListFragment extends Fragment {
         Log.i("time", "get to query: " + (startQuery - startTime));
         Date startDate = Date.from(mStart.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date endDate = Date.from(mEnd.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
         ParseQuery<MealPlan> mealQuery = ParseQuery.getQuery(MealPlan.class);
         mealQuery.whereLessThanOrEqualTo(MealPlan.KEY_DAY_OF, endDate);
         mealQuery.whereGreaterThanOrEqualTo(MealPlan.KEY_DAY_OF, startDate);
         mealQuery.whereEqualTo(MealPlan.KEY_OWNER, ParseUser.getCurrentUser());
-
-
 
         mealQuery.findInBackground((plans, e) -> {
             finishQuery = System.currentTimeMillis();

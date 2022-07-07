@@ -10,7 +10,9 @@
         android:id="@+id/cbListItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="left"
+        android:minWidth="@dimen/zero"
+        android:minHeight="@dimen/zero"
+        android:layout_marginVertical="@dimen/list_item_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -18,10 +20,12 @@
     <TextView
         android:id="@+id/tvListItem"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/cbListItem"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/sample_recipe_name" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

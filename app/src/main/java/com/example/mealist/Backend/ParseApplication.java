@@ -15,7 +15,6 @@ public class ParseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // TODO: ParseObject.registerSubclass([model].class);
         ParseObject.registerSubclass(GroceryList.class);
         ParseObject.registerSubclass(Ingredient.class);
         ParseObject.registerSubclass(Recipe.class);

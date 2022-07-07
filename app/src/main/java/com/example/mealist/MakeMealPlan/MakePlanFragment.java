@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.mealist.AddRecipe.AddRecipeFragment;
 import com.example.mealist.AddRecipe.Recipe;
+import com.example.mealist.GroceryList.GroceryList;
 import com.example.mealist.R;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
@@ -243,6 +244,22 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
                     Log.e(TAG, "error saving meal plan", e);
                     return;
                 }
+                ParseQuery<GroceryList> listQuery = ParseQuery.getQuery(GroceryList.class);
+                listQuery.whereLessThanOrEqualTo(GroceryList.KEY_START_DATE, mDate);
+                listQuery.whereGreaterThanOrEqualTo(GroceryList.KEY_END_DATE, mDate);
+                listQuery.whereEqualTo(GroceryList.KEY_OWNER, ParseUser.getCurrentUser());
+                listQuery.setLimit(1);
+
+                listQuery.findInBackground(new FindCallback<GroceryList>() {
+                    @Override
+                    public void done(List<GroceryList> lists, com.parse.ParseException e) {
+                        if (lists.size() > 0) {
+                            GroceryList oldList = lists.get(0);
+                            oldList.deleteInBackground();
+                        }
+                    }
+                });
+
                 Toast.makeText(getContext(), "Meal plan saved successfully", Toast.LENGTH_SHORT).show();
                 mTvDatePicker.setText("");
                 mTvBreakfastMeals.setText("");

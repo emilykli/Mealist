@@ -7,6 +7,9 @@
     <dimen name="access_word_top">15dp</dimen>
     <dimen name="access_word_bottom">5dp</dimen>
 
+    <dimen name="list_box_height">100dp</dimen>
+    <dimen name="bottom_navigation_bar_height">45dp</dimen>
+
     <dimen name="signup_words_margin">5dp</dimen>
     <dimen name="corner_radius">50dp</dimen>
 
@@ -29,6 +32,7 @@
     <dimen name="dialog_fragment_padding">15dp</dimen>
 
     <dimen name="list_margin">10dp</dimen>
+    <dimen name="list_item_margin">5dp</dimen>
     <dimen name="date_cardview_radius_padding">20dp</dimen>
-    <dimen name="date_cardview_arrow_margin">30dp</dimen>
+    <dimen name="date_cardview_arrow_margin">10dp</dimen>
 </resources>
