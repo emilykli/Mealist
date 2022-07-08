@@ -19,7 +19,10 @@ import com.example.mealist.Access.MainActivity;
 import com.example.mealist.Backend.SpoonacularClient;
 import com.example.mealist.MakeMealPlan.MakePlanFragment;
 import com.example.mealist.R;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.json.JSONException;
@@ -39,17 +42,17 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private TextView mTvRecipeIngredients;
     private TextView mTvNutritionInfo;
     private Button mBtnAdd;
+    private Button mBtnFavorite;
 
     private Recipe mRecipe;
 
-    private SpoonacularClient mClient;
+    private ParseUser mUser;
+    private List<Recipe> mUserFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
-
-        mClient = new SpoonacularClient();
 
         if (getIntent().getExtras() != null) {
             mRecipe = (Recipe) getIntent().getParcelableExtra("recipe");
@@ -85,7 +88,50 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 }
             });
 
+            mBtnFavorite = findViewById(R.id.btnFavorite);
 
+            assignUserAndFavorites();
+
+            mBtnFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mBtnFavorite.getText().toString().equals("Favorite")) {
+                        mUser.add("favorites", mRecipe);
+                        mUser.saveInBackground();
+                        mBtnFavorite.setText("Unfavorite");
+                    }
+                    else {
+                        Recipe removable = null;
+                        for (Recipe favorite : mUserFavorites) {
+                            if (favorite.getName().equals(mRecipe.getName())) {
+                                removable = favorite;
+                                break;
+                            }
+                        }
+                        mUserFavorites.remove(removable);
+                        mUser.put("favorites", mUserFavorites);
+                        mUser.saveInBackground();
+                        mBtnFavorite.setText("Favorite");
+                    }
+                }
+            });
+
+
+        }
+    }
+
+    private void assignUserAndFavorites() {
+        mUser = ParseUser.getCurrentUser();
+        mUserFavorites = (ArrayList) mUser.get("favorites");
+        for (Recipe favorite : mUserFavorites) {
+            favorite.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if (favorite.getName().equals(mRecipe.getName())) {
+                        mBtnFavorite.setText("Unfavorite");
+                    }
+                }
+            });
         }
     }
 
@@ -108,9 +154,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private void setNutrientText(Recipe recipe) {
         String nutrientText = "";
         nutrientText += recipe.getCalories() + " kcal\n";
-        nutrientText += recipe.getCarbs() + " g\n";
-        nutrientText += recipe.getFat() + " g\n";
-        nutrientText += recipe.getProtein() + " g";
+        nutrientText += recipe.getCarbs() + " g Carbs\n";
+        nutrientText += recipe.getFat() + " g Fat\n";
+        nutrientText += recipe.getProtein() + " g Protein";
         mTvNutritionInfo.setText(nutrientText);
 
     }
