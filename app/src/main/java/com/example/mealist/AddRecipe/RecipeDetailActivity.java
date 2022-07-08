@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -48,6 +50,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     private ParseUser mUser;
     private List<Recipe> mUserFavorites;
+
+    private GestureDetector mGestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,29 +99,47 @@ public class RecipeDetailActivity extends AppCompatActivity {
             mBtnFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mBtnFavorite.getText().toString().equals("Favorite")) {
-                        mUser.add("favorites", mRecipe);
-                        mUser.saveInBackground();
-                        mBtnFavorite.setText("Unfavorite");
-                    }
-                    else {
-                        Recipe removable = null;
-                        for (Recipe favorite : mUserFavorites) {
-                            if (favorite.getName().equals(mRecipe.getName())) {
-                                removable = favorite;
-                                break;
-                            }
-                        }
-                        mUserFavorites.remove(removable);
-                        mUser.put("favorites", mUserFavorites);
-                        mUser.saveInBackground();
-                        mBtnFavorite.setText("Favorite");
-                    }
+                    toggleFavoriteButton();
                 }
             });
 
+            mGestureDetector = new GestureDetector(this, new GestureListener());
 
         }
+    }
+
+    public void toggleFavoriteButton() {
+        if (mBtnFavorite.getText().toString().equals("Favorite")) {
+            setFavorite();
+        }
+        else {
+            setUnfavorite();
+        }
+    }
+
+    public void setFavorite() {
+        mUser.add("favorites", mRecipe);
+        mUser.saveInBackground();
+        mBtnFavorite.setText("Unfavorite");
+    }
+
+    public void setUnfavorite() {
+        Recipe removable = null;
+        for (Recipe favorite : mUserFavorites) {
+            if (favorite.getName().equals(mRecipe.getName())) {
+                removable = favorite;
+                break;
+            }
+        }
+        mUserFavorites.remove(removable);
+        mUser.put("favorites", mUserFavorites);
+        mUser.saveInBackground();
+        mBtnFavorite.setText("Favorite");
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        return mGestureDetector.onTouchEvent(e);
     }
 
     private void assignUserAndFavorites() {
@@ -159,6 +181,19 @@ public class RecipeDetailActivity extends AppCompatActivity {
         nutrientText += recipe.getProtein() + " g Protein";
         mTvNutritionInfo.setText(nutrientText);
 
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            toggleFavoriteButton();
+            return true;
+        }
     }
 
 }
