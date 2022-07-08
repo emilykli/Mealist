@@ -1,5 +1,6 @@
 package com.example.mealist.GroceryList;
 
+import com.example.mealist.AddRecipe.Ingredient;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -23,6 +24,9 @@ public class GroceryList extends ParseObject {
     public static final String KEY_DRINKS = "drinks";
     public static final String KEY_NUTS_FRUIT_VEG = "nutsfruitveg";
     public static final String KEY_OTHER = "other";
+
+    public static final String[] AISLES = {KEY_GRAINS, KEY_PANTRY, KEY_COLD_PRESERVED, KEY_DAIRY,
+            KEY_MEAT, KEY_DRINKS, KEY_NUTS_FRUIT_VEG, KEY_OTHER};
 
     public Date getStartDate() {
         return getDate(KEY_START_DATE);

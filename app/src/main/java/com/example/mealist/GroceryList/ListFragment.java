@@ -14,13 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mealist.AddRecipe.Ingredient;
 import com.example.mealist.AddRecipe.Recipe;
 import com.example.mealist.MakeMealPlan.MealPlan;
 import com.example.mealist.R;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -33,8 +36,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
+
 public class ListFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "ListFragment";
+    public static final String[] GRAINS = {"Pasta and Rice", "Bakery/Bread", "Cereal", "Bread"};
+    public static final String[] PANTRY = {"Baking", "Spices and Seasonings", "Nut butters, Jams, and Honey",
+            "Oil, Vinegar, Salad Dressing", "Condiments"};
+    public static final String[] COLD_PRESERVED = {"Refrigerated", "Frozen", "Canned and Jarred"};
+    public static final String[] DAIRY= {"Milk, Eggs, Other Dairy", "Cheese"};
+    public static final String[] MEAT = {"Meat", "Seafood"};
+    public static final String[] DRINKS = {"Tea and Coffee", "Beverages", "Alcoholic Beverages"};
+    public static final String[] NUTS_FRUITS_VEG = {"Produce", "Dried Fruits", "Nuts"};
+
+
+    private static SectionedRecyclerViewAdapter mSectionedAdapter;
 
     private TextView mTvStartDate;
     private TextView mTvEndDate;
@@ -46,7 +63,6 @@ public class ListFragment extends Fragment implements View.OnClickListener {
     private LocalDate mEnd;
 
     private RecyclerView mRvGroceryList;
-    private ListAdapter mAdapter;
     public List<Ingredient> mAllIngredients;
 
 
@@ -137,10 +153,10 @@ public class ListFragment extends Fragment implements View.OnClickListener {
 
     private void resetRecyclerView() {
         mAllIngredients = new ArrayList<>();
-        mAdapter = new ListAdapter(getContext(), mAllIngredients);
+        mSectionedAdapter = new SectionedRecyclerViewAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
-        mRvGroceryList.setAdapter(mAdapter);
+        mRvGroceryList.setAdapter(mSectionedAdapter);
         mRvGroceryList.setLayoutManager(linearLayoutManager);
     }
 
@@ -171,9 +187,15 @@ public class ListFragment extends Fragment implements View.OnClickListener {
 
                 GroceryList myList = lists.get(0);
                 mAllIngredients = myList.getIngredients();
-                mAdapter.clear();
-                mAdapter.addAll(mAllIngredients);
-                mAdapter.notifyDataSetChanged();
+
+                for (String aisle: GroceryList.AISLES) {
+                    List<Ingredient> myAisle = myList.getAisle(aisle);
+                    if (myAisle.size() > 0) {
+                        mSectionedAdapter.addSection(new AisleSection(aisle, myAisle));
+                    }
+                }
+
+                mSectionedAdapter.notifyDataSetChanged();
                 addIngredients = System.currentTimeMillis();
                 Log.i("time", "finish adding everything: " + (addIngredients - startTime));
             }
@@ -219,19 +241,83 @@ public class ListFragment extends Fragment implements View.OnClickListener {
             list.setOwner(ParseUser.getCurrentUser());
             list.setStartDate(startDate);
             list.setEndDate(endDate);
-            JSONArray ingredients = new JSONArray();
+
             for (Ingredient ingredient: mAllIngredients) {
-                ingredients.put(ingredient);
+                ingredient.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        String aisle = getAisleGrouping(ingredient);
+                        list.add(aisle, ingredient);
+                        list.saveInBackground();
+                    }
+                });
             }
-            Log.i(TAG, (ingredients).toString());
-            list.setIngredients(ingredients);
+
             list.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    Log.i(TAG, "done saving grocery list");
+                    for (String aisle: GroceryList.AISLES) {
+                        List<Ingredient> myAisle = list.getAisle(aisle);
+                        if (myAisle.size() > 0) {
+                            mSectionedAdapter.addSection(new AisleSection(aisle, myAisle));
+                        }
+                    }
+
+                    mSectionedAdapter.notifyDataSetChanged();
                 }
             });
+
         });
+
+    }
+
+    private String getAisleGrouping(Ingredient ingredient) {
+
+        String aisle = ingredient.getAisle();
+
+        for (String name: GRAINS) {
+            if (aisle.contains(name)) {
+                return GroceryList.KEY_GRAINS;
+            }
+        }
+
+        for (String name : PANTRY) {
+            if (aisle.contains(name)) {
+                return GroceryList.KEY_PANTRY;
+            }
+        }
+
+        for (String name : COLD_PRESERVED) {
+            if (aisle.contains(name)) {
+                return GroceryList.KEY_COLD_PRESERVED;
+            }
+        }
+
+        for (String name : DAIRY) {
+            if (aisle.contains(name)) {
+                return GroceryList.KEY_DAIRY;
+            }
+        }
+
+        for (String name : MEAT) {
+            if (aisle.contains(name)) {
+                return GroceryList.KEY_MEAT;
+            }
+        }
+
+        for (String name : DRINKS) {
+            if (aisle.contains(name)) {
+                return GroceryList.KEY_DRINKS;
+            }
+        }
+
+        for (String name : NUTS_FRUITS_VEG) {
+            if (aisle.contains(name)) {
+                return GroceryList.KEY_NUTS_FRUIT_VEG;
+            }
+        }
+
+        return GroceryList.KEY_OTHER;
     }
 
     private void addIngredientsToList(List<Recipe> meal) throws ParseException {
@@ -239,8 +325,23 @@ public class ListFragment extends Fragment implements View.OnClickListener {
             List<Ingredient> ingredients = (ArrayList) recipe.fetchIfNeeded().get(Recipe.KEY_INGREDIENTS);
             for (Ingredient ingredient : ingredients) {
                 mAllIngredients.add(ingredient);
-                mAdapter.notifyItemInserted(mAllIngredients.size() - 1);
             }
+        }
+    }
+
+    public static void headerClicked(AisleSection section) {
+        final SectionAdapter sectionAdapter = mSectionedAdapter.getAdapterForSection(section);
+
+        final boolean wasExpanded = section.isExpanded();
+        final int previousItemsTotal = section.getContentItemsTotal();
+
+        section.setExpanded(!wasExpanded);
+        sectionAdapter.notifyHeaderChanged();
+
+        if (wasExpanded) {
+            sectionAdapter.notifyItemRangeRemoved(0, previousItemsTotal);
+        } else {
+            sectionAdapter.notifyAllItemsInserted();
         }
     }
 }

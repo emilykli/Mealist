@@ -35,4 +35,6 @@
     <dimen name="list_item_margin">5dp</dimen>
     <dimen name="date_cardview_radius_padding">20dp</dimen>
     <dimen name="date_cardview_arrow_margin">10dp</dimen>
+
+    <dimen name="aisle_cardview">10dp</dimen>
 </resources>
