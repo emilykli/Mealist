@@ -7,11 +7,12 @@ import com.example.mealist.BuildConfig;
 
 public class SpoonacularClient extends AsyncHttpClient {
 
-    public static final String API_KEY = BuildConfig.SPOON_KEY_2;
+    public static final String API_KEY = BuildConfig.SPOON_KEY_3;
     public static final String RECIPE_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/complexSearch?apiKey=%s", API_KEY);
     public static final String INGREDIENTS_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/{id}/ingredientWidget.json?apiKey=%s", API_KEY);
     public static final String NUTRIENT_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/{id}/nutritionWidget.json?apiKey=%s", API_KEY);
     public static final String RECIPE_INFO_URL = String.format("https://api.spoonacular.com/recipes/{id}/information?includeNutrition=true&apiKey=%s", API_KEY);
+    public static final String GENERATE_RECIPE_URL = String.format("https://api.spoonacular.com/mealplanner/generate?apiKey=%s", API_KEY);
 
     public SpoonacularClient() {
         super();
@@ -36,6 +37,12 @@ public class SpoonacularClient extends AsyncHttpClient {
         String id_string = String.valueOf(id);
         String url = RECIPE_INFO_URL.replace("{id}", id_string);
         get(url, handler);
+    }
+
+    public void generateMealPlan(JsonHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.put("timeFrame", "day");
+        get(GENERATE_RECIPE_URL, params, handler);
     }
 
     public void getIngredients(int id, JsonHttpResponseHandler handler) {

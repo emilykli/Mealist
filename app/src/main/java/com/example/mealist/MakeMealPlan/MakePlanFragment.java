@@ -17,8 +17,11 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.mealist.AddRecipe.AddRecipeFragment;
+import com.example.mealist.AddRecipe.Ingredient;
 import com.example.mealist.AddRecipe.Recipe;
+import com.example.mealist.Backend.SpoonacularClient;
 import com.example.mealist.GroceryList.GroceryList;
 import com.example.mealist.R;
 import com.parse.FindCallback;
@@ -32,13 +35,18 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.Headers;
+
 public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
     public static final String TAG = "MakePlanFragment";
+
+    private SpoonacularClient mClient;
 
     private TextView mTvDatePicker;
     private String mDateString;
@@ -46,6 +54,8 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
     private TextView mTvBreakfastMeals;
     private TextView mTvLunchMeals;
     private TextView mTvDinnerMeals;
+
+    private Button mBtnGenerateMealPlan;
     private Button mBtnSubmitMealPlan;
 
     private JSONArray mBreakfast = new JSONArray();
@@ -115,6 +125,8 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mClient = new SpoonacularClient();
+
         mTvBreakfastMeals = view.findViewById(R.id.tvBreakfastMeals);
         mTvLunchMeals = view.findViewById(R.id.tvLunchMeals);
         mTvDinnerMeals = view.findViewById(R.id.tvDinnerMeals);
@@ -149,12 +161,138 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
                 e.printStackTrace();
             }
         });
+
+        mBtnGenerateMealPlan = view.findViewById(R.id.btnGenerateMealPlan);
+
+        mBtnGenerateMealPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generateMealPlan();
+            }
+        });
+    }
+
+    private void generateMealPlan(){
+        mClient.generateMealPlan(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, json.toString());
+                JSONObject jsonObject = json.jsonObject;
+                try {
+                    JSONArray meals = jsonObject.getJSONArray("meals");
+
+                    for(int i = 0; i < meals.length(); i++) {
+
+                        JSONObject jsonMeal = meals.getJSONObject(i);
+                        Recipe recipe = new Recipe();
+                        String name = jsonMeal.getString("title");
+                        recipe.setName(name);
+                        int id = jsonMeal.getInt("id");
+                        recipe.setSpoonacularId(id);
+                        recipe.setInstructions(jsonMeal.getString("sourceUrl"));
+                        mClient.getRecipeInformation(id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                JSONObject jsonObject = json.jsonObject;
+                                List<Ingredient> ingredients = new ArrayList<>();
+
+                                try {
+                                    JSONArray extendedIngredients = jsonObject.getJSONArray("extendedIngredients");
+                                    for(int i = 0; i < extendedIngredients.length(); i++) {
+                                        JSONObject extendedIngredient = (JSONObject) extendedIngredients.get(i);
+                                        Ingredient ingredient = new Ingredient();
+                                        ingredient.setName(extendedIngredient.getString("name"));
+                                        ingredient.setQuantity((Number) extendedIngredient.get("amount"));
+                                        String unit = extendedIngredient.getString("unit");
+                                        if (unit.isEmpty()) {
+                                            unit = "(whole)";
+                                        }
+                                        ingredient.setUnit(unit);
+                                        ingredient.setAisle(extendedIngredient.getString("aisle"));
+
+                                        ingredients.add(ingredient);
+                                    }
+                                    Ingredient.saveAllInBackground(ingredients, e -> {
+                                        if (e != null) {
+                                            Log.e(TAG, "saving all ingredients failed");
+                                        }
+                                    });
+
+                                    recipe.addAll(Recipe.KEY_INGREDIENTS, ingredients);
+                                    recipe.setInstructions(jsonObject.getString("sourceUrl"));
+                                    JSONArray nutrients = (JSONArray) ((JSONObject) jsonObject.getJSONObject("nutrition")).getJSONArray("nutrients");
+                                    for(int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {
+                                        JSONObject nutrient = (JSONObject) nutrients.get(nutrientIndex);
+                                        String name = nutrient.getString("name");
+                                        switch(name) {
+                                            case "Calories":
+                                                recipe.setCalories(nutrient.getDouble("amount"));
+                                                break;
+                                            case "Fat":
+                                                recipe.setFat(nutrient.getDouble("amount"));
+                                                break;
+                                            case "Carbohydrates":
+                                                recipe.setCarbs(nutrient.getDouble("amount"));
+                                                break;
+                                            case "Protein":
+                                            default:
+                                                recipe.setProtein(nutrient.getDouble("amount"));
+                                                break;
+                                        }
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                recipe.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(com.parse.ParseException e) {
+                                        if (e != null) {
+                                            Toast.makeText(getContext(), "error while saving recipe", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                            }
+                        });
+
+                        switch(i) {
+                            case 0:
+                                mBreakfast.put(recipe);
+                                mTvBreakfastMeals.append(name + "\n");
+                                break;
+                            case 1:
+                                mLunch.put(recipe);
+                                mTvLunchMeals.append(name + "\n");
+                                break;
+                            case 2:
+                                mDinner.put(recipe);
+                                mTvDinnerMeals.append(name + "\n");
+                                break;
+                        }
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+            }
+        });
     }
 
     private void populateMeals() throws JSONException {
         if (mBreakfast.length() > 0) {
             String breakfastString = "";
             for (int i = 0; i < mBreakfast.length(); i++) {
+                Log.i(TAG, mBreakfast.toString());
                 Recipe recipe = (Recipe) mBreakfast.get(i);
                 breakfastString += recipe.getName() + "\n";
             }

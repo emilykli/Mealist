@@ -22,8 +22,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity";
 
-    SpoonacularClient client;
-
     private EditText etUsername;
     private EditText etPassword;
     private Button btnLogin;

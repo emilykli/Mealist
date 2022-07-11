@@ -26,6 +26,7 @@
     <string name="breakfast">Breakfast:</string>
     <string name="lunch">Lunch:</string>
     <string name="dinner">Dinner:</string>
+    <string name="generate_meal">Generate Meal Plan</string>
     <string name="submit">Submit</string>
 
     <string name="selecting_for">Selecting recipe for:</string>
