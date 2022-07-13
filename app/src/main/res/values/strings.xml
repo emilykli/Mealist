@@ -32,6 +32,7 @@
     <string name="selecting_for">Selecting recipe for:</string>
     <string name="generic_meal">meal</string>
     <string name="search">Search</string>
+    <string name="recommend_for_me">Recommend for Me</string>
     <string name="search_hint">Search recipe by name</string>
     <string name="no_recipes_found">No recipes found</string>
 

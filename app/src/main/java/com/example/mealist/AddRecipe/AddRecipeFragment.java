@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import okhttp3.Headers;
 
@@ -47,6 +48,8 @@ public class AddRecipeFragment extends Fragment {
 
     private EditText mEtRecipeSearch;
     private Button mBtnSearch;
+
+    private Button mBtnRecommend;
 
     private RecyclerView mRvRecipeSearchResults;
     private RecipeAdapter mAdapter;
@@ -93,6 +96,9 @@ public class AddRecipeFragment extends Fragment {
         mBtnSearch = view.findViewById(R.id.btnSearch);
         setupSearchButton();
 
+        mBtnRecommend = view.findViewById(R.id.btnRecommend);
+        setupRecommendButton();
+
         mRvRecipeSearchResults = view.findViewById(R.id.rvRecipeSearchResults);
 
         mRecipes = new ArrayList<>();
@@ -106,7 +112,7 @@ public class AddRecipeFragment extends Fragment {
 
     }
 
-    public void setupSearchButton() {
+    private void setupSearchButton() {
         mBtnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,11 +128,8 @@ public class AddRecipeFragment extends Fragment {
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         JSONObject jsonObject = json.jsonObject;
                         mAdapter.clear();
-                        addRecipes(jsonObject);
+                        addRecipesFromSearch(jsonObject);
                         mPbLoading.setVisibility(ProgressBar.INVISIBLE);
-                        if (mRecipes.size() == 0) {
-                            mTvNoRecipes.setVisibility(TextView.VISIBLE);
-                        }
                     }
 
                     @Override
@@ -139,81 +142,26 @@ public class AddRecipeFragment extends Fragment {
         });
     }
 
-    public void addRecipes(JSONObject jsonObject) {
-        try {
-            JSONArray results = jsonObject.getJSONArray("results");
-            for (int i = 0; i < results.length(); i++) {
-                Recipe recipe = new Recipe();
-                JSONObject recipeJson = (JSONObject) results.get(i);
+    private void setupRecommendButton() {
+        mBtnRecommend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PriorityQueue<Recipe> pq = new PriorityQueue(5, new RecommendationComparator());
 
-                int recipeId = recipeJson.getInt("id");
-
-                recipe.setName(recipeJson.getString("title"));
-                recipe.setImageLink(recipeJson.getString("image"));
-                recipe.setSpoonacularId(recipeId);
-
-                client.getRecipeInformation(recipeId, new JsonHttpResponseHandler() {
+                client.generateRandomMeals(new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         JSONObject jsonObject = json.jsonObject;
-                        List<Ingredient> ingredients = new ArrayList<>();
                         try {
-                            JSONArray extendedIngredients = jsonObject.getJSONArray("extendedIngredients");
-                            for(int i = 0; i < extendedIngredients.length(); i++) {
-                                JSONObject extendedIngredient = (JSONObject) extendedIngredients.get(i);
-                                Ingredient ingredient = new Ingredient();
-                                ingredient.setName(extendedIngredient.getString("name"));
-                                ingredient.setQuantity((Number) extendedIngredient.get("amount"));
-                                String unit = extendedIngredient.getString("unit");
-                                if (unit.isEmpty()) {
-                                    unit = "(whole)";
-                                }
-                                ingredient.setUnit(unit);
-                                ingredient.setAisle(extendedIngredient.getString("aisle"));
+                            JSONArray generatedRecipes = jsonObject.getJSONArray("recipes");
 
-                                ingredients.add(ingredient);
+                            for(int i = 0; i < generatedRecipes.length(); i++) {
+                                JSONObject recipe = generatedRecipes.getJSONObject(i);
+
+                                int id = recipe.getInt("id");
+
+                                processRecipeById(id);
                             }
-                            Ingredient.saveAllInBackground(ingredients, e -> {
-                                if (e != null) {
-                                    Log.e(TAG, "saving all ingredients failed");
-                                }
-                            });
-
-                            recipe.addAll(Recipe.KEY_INGREDIENTS, ingredients);
-
-                            recipe.setInstructions(jsonObject.getString("sourceUrl"));
-                            recipe.setCheap(jsonObject.getBoolean(Recipe.KEY_CHEAP));
-                            recipe.setDairyFree(jsonObject.getBoolean(Recipe.KEY_DAIRY_FREE));
-                            recipe.setVegetarian(jsonObject.getBoolean(Recipe.KEY_VEGETARIAN));
-
-                            JSONArray nutrients = (JSONArray) ((JSONObject) jsonObject.getJSONObject("nutrition")).getJSONArray("nutrients");
-                            for(int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {
-                                JSONObject nutrient = (JSONObject) nutrients.get(nutrientIndex);
-                                String name = nutrient.getString("name");
-                                if (name.equals("Calories")) {
-                                    recipe.setCalories(nutrient.getDouble("amount"));
-                                }
-                                else if (name.equals("Fat")){
-                                    recipe.setFat(nutrient.getDouble("amount"));
-                                }
-                                else if (name.equals("Carbohydrates")) {
-                                    recipe.setCarbs(nutrient.getDouble("amount"));
-                                }
-                                else if (name.equals("Protein")) {
-                                    recipe.setProtein(nutrient.getDouble("amount"));
-                                }
-                            }
-
-                            recipe.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e != null) {
-                                        Toast.makeText(getContext(), "error while saving", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                }
-                            });
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -221,16 +169,111 @@ public class AddRecipeFragment extends Fragment {
 
                     @Override
                     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
+                        Toast.makeText(getContext(), "Error generating recommendations", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+    }
 
-                mRecipes.add(recipe);
-                mAdapter.notifyItemInserted(mRecipes.size() - 1);
+    private void addRecipesFromSearch(JSONObject jsonObject) {
+        try {
+            JSONArray results = jsonObject.getJSONArray("results");
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject recipeJson = (JSONObject) results.get(i);
+
+                int recipeId = recipeJson.getInt("id");
+                processRecipeById(recipeId);
+
             }
         } catch (JSONException e) {
             Log.e(TAG, "error getting results", e);
         }
+    }
+
+    private Recipe processRecipeById(int recipeId) {
+        Recipe recipe = new Recipe();
+
+        client.getRecipeInformation(recipeId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONObject jsonObject = json.jsonObject;
+                List<Ingredient> ingredients = new ArrayList<>();
+
+                try {
+                    recipe.setName(jsonObject.getString("title"));
+                    recipe.setImageLink(jsonObject.getString("image"));
+                    recipe.setSpoonacularId(recipeId);
+
+                    JSONArray extendedIngredients = jsonObject.getJSONArray("extendedIngredients");
+                    for(int i = 0; i < extendedIngredients.length(); i++) {
+                        JSONObject extendedIngredient = (JSONObject) extendedIngredients.get(i);
+                        Ingredient ingredient = new Ingredient();
+                        ingredient.setName(extendedIngredient.getString("name"));
+                        ingredient.setQuantity((Number) extendedIngredient.get("amount"));
+                        String unit = extendedIngredient.getString("unit");
+                        if (unit.isEmpty()) {
+                            unit = "(whole)";
+                        }
+                        ingredient.setUnit(unit);
+                        ingredient.setAisle(extendedIngredient.getString("aisle"));
+
+                        ingredients.add(ingredient);
+                    }
+                    Ingredient.saveAllInBackground(ingredients, e -> {
+                        if (e != null) {
+                            Log.e(TAG, "saving all ingredients failed");
+                        }
+                    });
+
+                    recipe.addAll(Recipe.KEY_INGREDIENTS, ingredients);
+
+                    recipe.setInstructions(jsonObject.getString("sourceUrl"));
+                    recipe.setCheap(jsonObject.getBoolean(Recipe.KEY_CHEAP));
+                    recipe.setDairyFree(jsonObject.getBoolean(Recipe.KEY_DAIRY_FREE));
+                    recipe.setVegetarian(jsonObject.getBoolean(Recipe.KEY_VEGETARIAN));
+
+                    JSONArray nutrients = (JSONArray) ((JSONObject) jsonObject.getJSONObject("nutrition")).getJSONArray("nutrients");
+                    for(int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {
+                        JSONObject nutrient = (JSONObject) nutrients.get(nutrientIndex);
+                        String name = nutrient.getString("name");
+                        if (name.equals("Calories")) {
+                            recipe.setCalories(nutrient.getDouble("amount"));
+                        }
+                        else if (name.equals("Fat")){
+                            recipe.setFat(nutrient.getDouble("amount"));
+                        }
+                        else if (name.equals("Carbohydrates")) {
+                            recipe.setCarbs(nutrient.getDouble("amount"));
+                        }
+                        else if (name.equals("Protein")) {
+                            recipe.setProtein(nutrient.getDouble("amount"));
+                        }
+                    }
+                    recipe.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Toast.makeText(getContext(), "error while saving", Toast.LENGTH_SHORT).show();
+                            }
+                            mRecipes.add(recipe);
+                            mAdapter.notifyItemInserted(mRecipes.size() - 1);
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+            }
+        });
+
+        return recipe;
+
     }
 
 
