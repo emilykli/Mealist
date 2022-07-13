@@ -20,6 +20,9 @@ public class Recipe extends ParseObject {
     public static final String KEY_FAT = "fat";
     public static final String KEY_PROTEIN = "protein";
     public static final String KEY_INSTRUCTIONS = "instructions";
+    public static final String KEY_CHEAP = "cheap";
+    public static final String KEY_DAIRY_FREE = "dairyFree";
+    public static final String KEY_VEGETARIAN = "vegetarian";
 
     public String getName() {
         return getString(KEY_NAME);
@@ -89,6 +92,30 @@ public class Recipe extends ParseObject {
         put(KEY_INSTRUCTIONS, instructions);
     }
 
+    public void setCheap(Boolean cheap) {
+        put(KEY_CHEAP, cheap);
+    }
+
+    public Boolean getCheap() {
+        return getBoolean(KEY_CHEAP);
+    }
+
+    public void setDairyFree(Boolean dairyFree) {
+        put(KEY_DAIRY_FREE, dairyFree);
+    }
+
+    public Boolean getDairyFree() {
+        return getBoolean(KEY_DAIRY_FREE);
+    }
+
+    public void setVegetarian(Boolean vegetarian) {
+        put(KEY_VEGETARIAN, vegetarian);
+    }
+
+    public Boolean getVegetarian() {
+        return getBoolean(KEY_VEGETARIAN);
+    }
+
     public JSONObject toJsonObject() throws JSONException {
         JSONObject jsonRecipe = new JSONObject();
         jsonRecipe.put(KEY_NAME, getName());
@@ -100,6 +127,10 @@ public class Recipe extends ParseObject {
         jsonRecipe.put(KEY_FAT, getFat());
         jsonRecipe.put(KEY_PROTEIN, getProtein());
         jsonRecipe.put(KEY_INSTRUCTIONS, getInstructions());
+        jsonRecipe.put(KEY_CHEAP, getCheap());
+        jsonRecipe.put(KEY_DAIRY_FREE, getDairyFree());
+        jsonRecipe.put(KEY_VEGETARIAN, getVegetarian());
+
         return jsonRecipe;
     }
 

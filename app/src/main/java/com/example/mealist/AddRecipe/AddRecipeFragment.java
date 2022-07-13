@@ -182,6 +182,9 @@ public class AddRecipeFragment extends Fragment {
                             recipe.addAll(Recipe.KEY_INGREDIENTS, ingredients);
 
                             recipe.setInstructions(jsonObject.getString("sourceUrl"));
+                            recipe.setCheap(jsonObject.getBoolean(Recipe.KEY_CHEAP));
+                            recipe.setDairyFree(jsonObject.getBoolean(Recipe.KEY_DAIRY_FREE));
+                            recipe.setVegetarian(jsonObject.getBoolean(Recipe.KEY_VEGETARIAN));
 
                             JSONArray nutrients = (JSONArray) ((JSONObject) jsonObject.getJSONObject("nutrition")).getJSONArray("nutrients");
                             for(int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {

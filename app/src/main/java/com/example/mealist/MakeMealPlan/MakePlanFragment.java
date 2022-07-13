@@ -25,6 +25,8 @@ import com.example.mealist.Backend.SpoonacularClient;
 import com.example.mealist.GroceryList.GroceryList;
 import com.example.mealist.R;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -354,6 +356,38 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
     public void saveRecipes(JSONArray recipes) throws JSONException {
         for (int i = 0 ; i < recipes.length(); i++) {
             Recipe recipe = (Recipe) recipes.get(i);
+            ParseUser user = ParseUser.getCurrentUser();
+            int cheap = user.getInt("cheapPreference");
+            int dairyFree = user.getInt("dairyFreePreference");
+            int vegetarian = user.getInt("vegetarianPreference");
+
+            if (recipe.getCheap()) {
+                cheap += 1;
+            }
+            else {
+                cheap -= 1;
+            }
+
+            if (recipe.getDairyFree()) {
+                dairyFree += 1;
+            }
+
+            else {
+                dairyFree -= 1;
+            }
+
+            if (recipe.getVegetarian()) {
+                vegetarian += 1;
+            }
+
+            else {
+                vegetarian -= 1;
+            }
+
+            user.put("cheapPreference", cheap);
+            user.put("dairyFreePreference", dairyFree);
+            user.put("vegetarianPreference", vegetarian);
+
             recipe.saveInBackground(e -> Log.i(TAG, recipe.getName() + " saved"));
         }
     }
@@ -506,6 +540,9 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
             recipe.setFat(object.getDouble(Recipe.KEY_FAT));
             recipe.setProtein(object.getDouble(Recipe.KEY_PROTEIN));
             recipe.setInstructions(object.getString(Recipe.KEY_INSTRUCTIONS));
+            recipe.setCheap(object.getBoolean(Recipe.KEY_CHEAP));
+            recipe.setDairyFree(object.getBoolean(Recipe.KEY_CHEAP));
+            recipe.setVegetarian(object.getBoolean(Recipe.KEY_VEGETARIAN));
 
             recipe.saveInBackground(e -> Log.i(TAG, recipe.getName() + " got saved"));
             newRecipes.put(recipe);
