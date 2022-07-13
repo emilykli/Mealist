@@ -22,6 +22,7 @@ import com.example.mealist.AddRecipe.AddRecipeFragment;
 import com.example.mealist.AddRecipe.Ingredient;
 import com.example.mealist.AddRecipe.Recipe;
 import com.example.mealist.Backend.SpoonacularClient;
+import com.example.mealist.Backend.User;
 import com.example.mealist.GroceryList.GroceryList;
 import com.example.mealist.R;
 import com.parse.FindCallback;
@@ -357,9 +358,9 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
         for (int i = 0 ; i < recipes.length(); i++) {
             Recipe recipe = (Recipe) recipes.get(i);
             ParseUser user = ParseUser.getCurrentUser();
-            int cheap = user.getInt("cheapPreference");
-            int dairyFree = user.getInt("dairyFreePreference");
-            int vegetarian = user.getInt("vegetarianPreference");
+            int cheap = user.getInt(User.KEY_CHEAP_PREFERENCE);
+            int dairyFree = user.getInt(User.KEY_DAIRY_FREE_PREFERENCE);
+            int vegetarian = user.getInt(User.KEY_VEGETARIAN_PREFERENCE);
 
             if (recipe.getCheap()) {
                 cheap += 1;
@@ -384,9 +385,9 @@ public class MakePlanFragment extends Fragment implements DatePickerDialog.OnDat
                 vegetarian -= 1;
             }
 
-            user.put("cheapPreference", cheap);
-            user.put("dairyFreePreference", dairyFree);
-            user.put("vegetarianPreference", vegetarian);
+            user.put(User.KEY_CHEAP_PREFERENCE, cheap);
+            user.put(User.KEY_DAIRY_FREE_PREFERENCE, dairyFree);
+            user.put(User.KEY_VEGETARIAN_PREFERENCE, vegetarian);
 
             recipe.saveInBackground(e -> Log.i(TAG, recipe.getName() + " saved"));
         }
