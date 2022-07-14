@@ -7,7 +7,7 @@ import com.example.mealist.BuildConfig;
 
 public class SpoonacularClient extends AsyncHttpClient {
 
-    public static final String API_KEY = BuildConfig.SPOON_KEY_3;
+    public static final String API_KEY = BuildConfig.SPOON_KEY_2;
     public static final String RECIPE_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/complexSearch?apiKey=%s", API_KEY);
     public static final String INGREDIENTS_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/{id}/ingredientWidget.json?apiKey=%s", API_KEY);
     public static final String NUTRIENT_SEARCH_URL = String.format("https://api.spoonacular.com/recipes/{id}/nutritionWidget.json?apiKey=%s", API_KEY);
@@ -49,7 +49,7 @@ public class SpoonacularClient extends AsyncHttpClient {
     public void generateRandomMeals(JsonHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         // TODO: maybe use preferences to put params in "tags", add new argument for all the tags
-        params.put("number", 5);
+        params.put("number", 4);
         get(RANDOM_RECIPE_URL, params, handler);
     }
 

@@ -19,9 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.mealist.Backend.User;
 import com.example.mealist.R;
 import com.example.mealist.Backend.SpoonacularClient;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.json.JSONArray;
@@ -54,6 +56,8 @@ public class AddRecipeFragment extends Fragment {
     private RecyclerView mRvRecipeSearchResults;
     private RecipeAdapter mAdapter;
     private List<Recipe> mRecipes;
+
+    private PriorityQueue<Object[]> mPqRecipes;
 
     private ProgressBar mPbLoading;
 
@@ -146,11 +150,12 @@ public class AddRecipeFragment extends Fragment {
         mBtnRecommend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PriorityQueue<Recipe> pq = new PriorityQueue(5, new RecommendationComparator());
+                mPqRecipes = new PriorityQueue(4, new RecommendationComparator());
 
                 client.generateRandomMeals(new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        mAdapter.clear();
                         JSONObject jsonObject = json.jsonObject;
                         try {
                             JSONArray generatedRecipes = jsonObject.getJSONArray("recipes");
@@ -160,7 +165,7 @@ public class AddRecipeFragment extends Fragment {
 
                                 int id = recipe.getInt("id");
 
-                                processRecipeById(id);
+                                processRecipeById(id, false);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -172,6 +177,11 @@ public class AddRecipeFragment extends Fragment {
                         Toast.makeText(getContext(), "Error generating recommendations", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+//                for(Recipe recipe : mRecipes) {
+//                    Log.i(TAG, "help" + recipe.getName());
+//                }
+
             }
         });
     }
@@ -183,7 +193,7 @@ public class AddRecipeFragment extends Fragment {
                 JSONObject recipeJson = (JSONObject) results.get(i);
 
                 int recipeId = recipeJson.getInt("id");
-                processRecipeById(recipeId);
+                processRecipeById(recipeId, true);
 
             }
         } catch (JSONException e) {
@@ -191,7 +201,7 @@ public class AddRecipeFragment extends Fragment {
         }
     }
 
-    private Recipe processRecipeById(int recipeId) {
+    private void processRecipeById(int recipeId, boolean forSearch) {
         Recipe recipe = new Recipe();
 
         client.getRecipeInformation(recipeId, new JsonHttpResponseHandler() {
@@ -256,8 +266,48 @@ public class AddRecipeFragment extends Fragment {
                             if (e != null) {
                                 Toast.makeText(getContext(), "error while saving", Toast.LENGTH_SHORT).show();
                             }
-                            mRecipes.add(recipe);
-                            mAdapter.notifyItemInserted(mRecipes.size() - 1);
+                            if(forSearch) {
+                                mRecipes.add(recipe);
+                                mAdapter.notifyItemInserted(mRecipes.size() - 1);
+                            }
+                            else {
+                                ParseUser user = ParseUser.getCurrentUser();
+                                double userCheap = user.getDouble(User.KEY_CHEAP_PREFERENCE);
+                                double userVegetarian = user.getDouble(User.KEY_VEGETARIAN_PREFERENCE);
+                                double userDairyFree = user.getDouble(User.KEY_DAIRY_FREE_PREFERENCE);
+
+                                double cheapMultiplier = recipe.getCheap() ? 1.0 : -1.0;
+                                double vegetarianMultiplier = recipe.getVegetarian() ? 1.0 : -1.0;
+                                double dairyFreeMultiplier = recipe.getDairyFree() ? 1.0 : -1.0;
+
+                                double recipePriority = userCheap * cheapMultiplier + userVegetarian * vegetarianMultiplier + userDairyFree * dairyFreeMultiplier;
+
+//                                Log.i(TAG, recipe.getName() + " priority: " + recipePriority);
+//                                Log.i(TAG, "preferences: " + userCheap + " " + userVegetarian + " " + userDairyFree);
+//                                Log.i(TAG, "multipliers: " + cheapMultiplier + " " + vegetarianMultiplier + " " + dairyFreeMultiplier);
+
+                                Object[] priorityRecipe = {recipe, recipePriority};
+                                mPqRecipes.add(priorityRecipe);
+
+//                                Log.i(TAG, mPqRecipes.toString());
+                                String output = "";
+
+                                for (Object[] obj : mPqRecipes) {
+                                    output += "[" + obj[0].toString() + ", " + obj[1] + "],";
+                                }
+
+                                Log.i(TAG, output);
+
+                                if (mPqRecipes.size() == 4) {
+                                    while (!mPqRecipes.isEmpty()) {
+                                        Object[] prioRecipe = mPqRecipes.poll();
+                                        Recipe r = (Recipe) prioRecipe[0];
+                                        mRecipes.add(r);
+                                        mAdapter.notifyItemInserted(mRecipes.size() - 1);
+                                    }
+                                }
+
+                            }
                         }
                     });
 
@@ -271,9 +321,6 @@ public class AddRecipeFragment extends Fragment {
 
             }
         });
-
-        return recipe;
-
     }
 
 
