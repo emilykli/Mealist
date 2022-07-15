@@ -177,7 +177,12 @@ public class AddRecipeFragment extends Fragment {
                 JSONObject recipeJson = (JSONObject) results.get(i);
 
                 int recipeId = recipeJson.getInt("id");
-                processRecipeById(recipeId, true);
+                if(resultsKey.equals("results")) {
+                    processRecipeById(recipeId, true);
+                }
+                else {
+                    processRecipeById(recipeId, false);
+                }
 
             }
         } catch (JSONException e) {
@@ -262,15 +267,8 @@ public class AddRecipeFragment extends Fragment {
                             }
                             else {
                                 ParseUser user = ParseUser.getCurrentUser();
-                                double userCheap = user.getDouble(User.KEY_CHEAP_PREFERENCE);
-                                double userVegetarian = user.getDouble(User.KEY_VEGETARIAN_PREFERENCE);
-                                double userDairyFree = user.getDouble(User.KEY_DAIRY_FREE_PREFERENCE);
 
-                                double cheapMultiplier = recipe.getCheap() ? 1.0 : -1.0;
-                                double vegetarianMultiplier = recipe.getVegetarian() ? 1.0 : -1.0;
-                                double dairyFreeMultiplier = recipe.getDairyFree() ? 1.0 : -1.0;
-
-                                double recipePriority = userCheap * cheapMultiplier + userVegetarian * vegetarianMultiplier + userDairyFree * dairyFreeMultiplier;
+                                double recipePriority = getRecipePriority(user, recipe);
 
                                 Object[] priorityRecipe = {recipe, recipePriority};
                                 mPqRecipes.add(priorityRecipe);
@@ -307,6 +305,20 @@ public class AddRecipeFragment extends Fragment {
 
             }
         });
+    }
+
+    public double getRecipePriority(ParseUser user, Recipe recipe) {
+        double userCheap = user.getDouble(User.KEY_CHEAP_PREFERENCE);
+        double userVegetarian = user.getDouble(User.KEY_VEGETARIAN_PREFERENCE);
+        double userDairyFree = user.getDouble(User.KEY_DAIRY_FREE_PREFERENCE);
+
+        double cheapMultiplier = recipe.getCheap() ? 1.0 : -1.0;
+        double vegetarianMultiplier = recipe.getVegetarian() ? 1.0 : -1.0;
+        double dairyFreeMultiplier = recipe.getDairyFree() ? 1.0 : -1.0;
+
+        double recipePriority = userCheap * cheapMultiplier + userVegetarian * vegetarianMultiplier + userDairyFree * dairyFreeMultiplier;
+
+        return recipePriority;
     }
 
 
