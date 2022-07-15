@@ -15,6 +15,8 @@ public class SpoonacularClient extends AsyncHttpClient {
     public static final String GENERATE_RECIPE_URL = String.format("https://api.spoonacular.com/mealplanner/generate?apiKey=%s", API_KEY);
     public static final String RANDOM_RECIPE_URL = String.format("https://api.spoonacular.com/recipes/random?apiKey=%s", API_KEY);
 
+    public static final int SEARCH_LIMIT = 5;
+
     public SpoonacularClient() {
         super();
     }
@@ -22,7 +24,7 @@ public class SpoonacularClient extends AsyncHttpClient {
     public void getRecipes(String query, JsonHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.put("query", query);
-        params.put("number", 3);
+        params.put("number", SEARCH_LIMIT);
         get(RECIPE_SEARCH_URL, params, handler);
     }
 
@@ -49,7 +51,7 @@ public class SpoonacularClient extends AsyncHttpClient {
     public void generateRandomMeals(JsonHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         // TODO: maybe use preferences to put params in "tags", add new argument for all the tags
-        params.put("number", 4);
+        params.put("number", SEARCH_LIMIT);
         get(RANDOM_RECIPE_URL, params, handler);
     }
 

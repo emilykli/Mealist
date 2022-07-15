@@ -246,7 +246,7 @@ public class ListFragment extends Fragment implements View.OnClickListener {
                 ingredient.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
-                        String aisle = getAisleGrouping(ingredient);
+                        String aisle = getAisleGrouping(ingredient.getAisle());
                         list.add(aisle, ingredient);
                         list.saveInBackground();
                     }
@@ -271,9 +271,7 @@ public class ListFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private String getAisleGrouping(Ingredient ingredient) {
-
-        String aisle = ingredient.getAisle();
+    public static String getAisleGrouping(String aisle) {
 
         for (String name: GRAINS) {
             if (aisle.contains(name)) {
