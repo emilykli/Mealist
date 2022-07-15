@@ -120,6 +120,8 @@ public class AddRecipeFragment extends Fragment {
         mBtnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPqRecipes = new PriorityQueue(SpoonacularClient.SEARCH_LIMIT, new RecommendationComparator());
+
                 String searchQuery = mEtRecipeSearch.getText().toString();
                 if (searchQuery.isEmpty()) {
                     Toast.makeText(getContext(), "search cannot be empty", Toast.LENGTH_SHORT).show();
@@ -133,7 +135,6 @@ public class AddRecipeFragment extends Fragment {
                         JSONObject jsonObject = json.jsonObject;
                         mAdapter.clear();
                         addRecipesFromApiCall(jsonObject, "results");
-                        mPbLoading.setVisibility(ProgressBar.INVISIBLE);
                     }
 
                     @Override
@@ -151,6 +152,7 @@ public class AddRecipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mPqRecipes = new PriorityQueue(SpoonacularClient.SEARCH_LIMIT, new RecommendationComparator());
+                mPbLoading.setVisibility(ProgressBar.VISIBLE);
 
                 client.generateRandomMeals(new JsonHttpResponseHandler() {
                     @Override
@@ -177,12 +179,7 @@ public class AddRecipeFragment extends Fragment {
                 JSONObject recipeJson = (JSONObject) results.get(i);
 
                 int recipeId = recipeJson.getInt("id");
-                if(resultsKey.equals("results")) {
-                    processRecipeById(recipeId, true);
-                }
-                else {
-                    processRecipeById(recipeId, false);
-                }
+                processRecipeById(recipeId);
 
             }
         } catch (JSONException e) {
@@ -207,97 +204,88 @@ public class AddRecipeFragment extends Fragment {
         }
     }
 
-    private void processRecipeById(int recipeId, boolean forSearch) {
+    private void setRecipeProperties(Recipe recipe, JSONObject jsonObject, int recipeId) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        try {
+            recipe.setName(jsonObject.getString("title"));
+            recipe.setImageLink(jsonObject.getString("image"));
+            recipe.setSpoonacularId(recipeId);
+
+            JSONArray extendedIngredients = jsonObject.getJSONArray("extendedIngredients");
+
+            processExtendedIngredients(extendedIngredients, ingredients);
+
+            Ingredient.saveAllInBackground(ingredients, e -> {
+                if (e != null) {
+                    Log.e(TAG, "saving all ingredients failed");
+                }
+            });
+
+            recipe.addAll(Recipe.KEY_INGREDIENTS, ingredients);
+
+            recipe.setInstructions(jsonObject.getString("sourceUrl"));
+            recipe.setCheap(jsonObject.getBoolean(Recipe.KEY_CHEAP));
+            recipe.setDairyFree(jsonObject.getBoolean(Recipe.KEY_DAIRY_FREE));
+            recipe.setVegetarian(jsonObject.getBoolean(Recipe.KEY_VEGETARIAN));
+
+            JSONArray nutrients = jsonObject.getJSONObject("nutrition").getJSONArray("nutrients");
+            for(int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {
+                JSONObject nutrient = (JSONObject) nutrients.get(nutrientIndex);
+                String name = nutrient.getString("name");
+                if (name.equals("Calories")) {
+                    recipe.setCalories(nutrient.getDouble("amount"));
+                }
+                else if (name.equals("Fat")){
+                    recipe.setFat(nutrient.getDouble("amount"));
+                }
+                else if (name.equals("Carbohydrates")) {
+                    recipe.setCarbs(nutrient.getDouble("amount"));
+                }
+                else if (name.equals("Protein")) {
+                    recipe.setProtein(nutrient.getDouble("amount"));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void processRecipeById(int recipeId) {
         Recipe recipe = new Recipe();
 
         client.getRecipeInformation(recipeId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONObject jsonObject = json.jsonObject;
-                List<Ingredient> ingredients = new ArrayList<>();
 
-                try {
-                    recipe.setName(jsonObject.getString("title"));
-                    recipe.setImageLink(jsonObject.getString("image"));
-                    recipe.setSpoonacularId(recipeId);
+                setRecipeProperties(recipe, jsonObject, recipeId);
 
-                    JSONArray extendedIngredients = jsonObject.getJSONArray("extendedIngredients");
-
-                    processExtendedIngredients(extendedIngredients, ingredients);
-
-                    Ingredient.saveAllInBackground(ingredients, e -> {
+                recipe.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
                         if (e != null) {
-                            Log.e(TAG, "saving all ingredients failed");
+                            Toast.makeText(getContext(), "error while saving", Toast.LENGTH_SHORT).show();
                         }
-                    });
 
-                    recipe.addAll(Recipe.KEY_INGREDIENTS, ingredients);
+                        ParseUser user = ParseUser.getCurrentUser();
 
-                    recipe.setInstructions(jsonObject.getString("sourceUrl"));
-                    recipe.setCheap(jsonObject.getBoolean(Recipe.KEY_CHEAP));
-                    recipe.setDairyFree(jsonObject.getBoolean(Recipe.KEY_DAIRY_FREE));
-                    recipe.setVegetarian(jsonObject.getBoolean(Recipe.KEY_VEGETARIAN));
+                        double recipePriority = getRecipePriority(user, recipe);
 
-                    JSONArray nutrients = (JSONArray) ((JSONObject) jsonObject.getJSONObject("nutrition")).getJSONArray("nutrients");
-                    for(int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {
-                        JSONObject nutrient = (JSONObject) nutrients.get(nutrientIndex);
-                        String name = nutrient.getString("name");
-                        if (name.equals("Calories")) {
-                            recipe.setCalories(nutrient.getDouble("amount"));
-                        }
-                        else if (name.equals("Fat")){
-                            recipe.setFat(nutrient.getDouble("amount"));
-                        }
-                        else if (name.equals("Carbohydrates")) {
-                            recipe.setCarbs(nutrient.getDouble("amount"));
-                        }
-                        else if (name.equals("Protein")) {
-                            recipe.setProtein(nutrient.getDouble("amount"));
-                        }
-                    }
-                    recipe.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                Toast.makeText(getContext(), "error while saving", Toast.LENGTH_SHORT).show();
-                            }
-                            if(forSearch) {
-                                mRecipes.add(recipe);
+                        Object[] priorityRecipe = {recipe, recipePriority};
+                        mPqRecipes.add(priorityRecipe);
+
+                        if (mPqRecipes.size() == SpoonacularClient.SEARCH_LIMIT) {
+                            while (!mPqRecipes.isEmpty()) {
+                                Object[] prioRecipe = mPqRecipes.poll();
+                                Recipe r = (Recipe) prioRecipe[0];
+                                mRecipes.add(r);
                                 mAdapter.notifyItemInserted(mRecipes.size() - 1);
                             }
-                            else {
-                                ParseUser user = ParseUser.getCurrentUser();
-
-                                double recipePriority = getRecipePriority(user, recipe);
-
-                                Object[] priorityRecipe = {recipe, recipePriority};
-                                mPqRecipes.add(priorityRecipe);
-
-                                Log.i(TAG, mPqRecipes.toString());
-                                String output = "";
-
-                                for (Object[] obj : mPqRecipes) {
-                                    output += "[" + obj[0].toString() + ", " + obj[1] + "],";
-                                }
-
-                                Log.i(TAG, output);
-
-                                if (mPqRecipes.size() == SpoonacularClient.SEARCH_LIMIT) {
-                                    while (!mPqRecipes.isEmpty()) {
-                                        Object[] prioRecipe = mPqRecipes.poll();
-                                        Recipe r = (Recipe) prioRecipe[0];
-                                        mRecipes.add(r);
-                                        mAdapter.notifyItemInserted(mRecipes.size() - 1);
-                                    }
-                                }
-
-                            }
+                            mPbLoading.setVisibility(ProgressBar.INVISIBLE);
                         }
-                    });
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                        }
+                });
             }
 
             @Override
