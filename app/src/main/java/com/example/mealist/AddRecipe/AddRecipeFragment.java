@@ -185,6 +185,23 @@ public class AddRecipeFragment extends Fragment {
         }
     }
 
+    private void processExtendedIngredients(JSONArray extendedIngredients, List<Ingredient> ingredients) throws JSONException {
+        for(int i = 0; i < extendedIngredients.length(); i++) {
+            JSONObject extendedIngredient = (JSONObject) extendedIngredients.get(i);
+            Ingredient ingredient = new Ingredient();
+            ingredient.setName(extendedIngredient.getString("name"));
+            ingredient.setQuantity((Number) extendedIngredient.get("amount"));
+            String unit = extendedIngredient.getString("unit");
+            if (unit.isEmpty()) {
+                unit = "(whole)";
+            }
+            ingredient.setUnit(unit);
+            ingredient.setAisle(extendedIngredient.getString("aisle"));
+
+            ingredients.add(ingredient);
+        }
+    }
+
     private void processRecipeById(int recipeId, boolean forSearch) {
         Recipe recipe = new Recipe();
 
@@ -200,20 +217,9 @@ public class AddRecipeFragment extends Fragment {
                     recipe.setSpoonacularId(recipeId);
 
                     JSONArray extendedIngredients = jsonObject.getJSONArray("extendedIngredients");
-                    for(int i = 0; i < extendedIngredients.length(); i++) {
-                        JSONObject extendedIngredient = (JSONObject) extendedIngredients.get(i);
-                        Ingredient ingredient = new Ingredient();
-                        ingredient.setName(extendedIngredient.getString("name"));
-                        ingredient.setQuantity((Number) extendedIngredient.get("amount"));
-                        String unit = extendedIngredient.getString("unit");
-                        if (unit.isEmpty()) {
-                            unit = "(whole)";
-                        }
-                        ingredient.setUnit(unit);
-                        ingredient.setAisle(extendedIngredient.getString("aisle"));
 
-                        ingredients.add(ingredient);
-                    }
+                    processExtendedIngredients(extendedIngredients, ingredients);
+
                     Ingredient.saveAllInBackground(ingredients, e -> {
                         if (e != null) {
                             Log.e(TAG, "saving all ingredients failed");
