@@ -132,7 +132,7 @@ public class AddRecipeFragment extends Fragment {
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         JSONObject jsonObject = json.jsonObject;
                         mAdapter.clear();
-                        addRecipesFromSearch(jsonObject);
+                        addRecipesFromApiCall(jsonObject, "results");
                         mPbLoading.setVisibility(ProgressBar.INVISIBLE);
                     }
 
@@ -150,26 +150,14 @@ public class AddRecipeFragment extends Fragment {
         mBtnRecommend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPqRecipes = new PriorityQueue(4, new RecommendationComparator());
+                mPqRecipes = new PriorityQueue(SpoonacularClient.SEARCH_LIMIT, new RecommendationComparator());
 
                 client.generateRandomMeals(new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         mAdapter.clear();
                         JSONObject jsonObject = json.jsonObject;
-                        try {
-                            JSONArray generatedRecipes = jsonObject.getJSONArray("recipes");
-
-                            for(int i = 0; i < generatedRecipes.length(); i++) {
-                                JSONObject recipe = generatedRecipes.getJSONObject(i);
-
-                                int id = recipe.getInt("id");
-
-                                processRecipeById(id, false);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        addRecipesFromApiCall(jsonObject, "recipes");
                     }
 
                     @Override
@@ -178,17 +166,13 @@ public class AddRecipeFragment extends Fragment {
                     }
                 });
 
-//                for(Recipe recipe : mRecipes) {
-//                    Log.i(TAG, "help" + recipe.getName());
-//                }
-
             }
         });
     }
 
-    private void addRecipesFromSearch(JSONObject jsonObject) {
+    private void addRecipesFromApiCall(JSONObject jsonObject, String resultsKey) {
         try {
-            JSONArray results = jsonObject.getJSONArray("results");
+            JSONArray results = jsonObject.getJSONArray(resultsKey);
             for (int i = 0; i < results.length(); i++) {
                 JSONObject recipeJson = (JSONObject) results.get(i);
 
@@ -282,14 +266,10 @@ public class AddRecipeFragment extends Fragment {
 
                                 double recipePriority = userCheap * cheapMultiplier + userVegetarian * vegetarianMultiplier + userDairyFree * dairyFreeMultiplier;
 
-//                                Log.i(TAG, recipe.getName() + " priority: " + recipePriority);
-//                                Log.i(TAG, "preferences: " + userCheap + " " + userVegetarian + " " + userDairyFree);
-//                                Log.i(TAG, "multipliers: " + cheapMultiplier + " " + vegetarianMultiplier + " " + dairyFreeMultiplier);
-
                                 Object[] priorityRecipe = {recipe, recipePriority};
                                 mPqRecipes.add(priorityRecipe);
 
-//                                Log.i(TAG, mPqRecipes.toString());
+                                Log.i(TAG, mPqRecipes.toString());
                                 String output = "";
 
                                 for (Object[] obj : mPqRecipes) {
@@ -298,7 +278,7 @@ public class AddRecipeFragment extends Fragment {
 
                                 Log.i(TAG, output);
 
-                                if (mPqRecipes.size() == 4) {
+                                if (mPqRecipes.size() == SpoonacularClient.SEARCH_LIMIT) {
                                     while (!mPqRecipes.isEmpty()) {
                                         Object[] prioRecipe = mPqRecipes.poll();
                                         Recipe r = (Recipe) prioRecipe[0];
