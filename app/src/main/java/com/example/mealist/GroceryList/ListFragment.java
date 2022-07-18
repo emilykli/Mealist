@@ -256,14 +256,15 @@ public class ListFragment extends Fragment implements View.OnClickListener {
             list.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
+                    int numAisles = 0;
                     for (String aisle: GroceryList.AISLES) {
                         List<Ingredient> myAisle = list.getAisle(aisle);
                         if (myAisle.size() > 0) {
                             mSectionedAdapter.addSection(new AisleSection(aisle, myAisle));
+                            mSectionedAdapter.notifyItemInserted(numAisles);
+                            numAisles++;
                         }
                     }
-
-                    mSectionedAdapter.notifyDataSetChanged();
                 }
             });
 
