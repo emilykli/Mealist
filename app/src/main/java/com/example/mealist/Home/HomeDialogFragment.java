@@ -22,7 +22,6 @@ public class HomeDialogFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    // TODO: pass around recipes agaiñ :\
     public static HomeDialogFragment newInstance(String mealTime, String mealInfo) {
         HomeDialogFragment fragment = new HomeDialogFragment();
         Bundle args = new Bundle();

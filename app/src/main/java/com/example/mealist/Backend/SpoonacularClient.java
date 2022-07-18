@@ -15,7 +15,7 @@ public class SpoonacularClient extends AsyncHttpClient {
     public static final String GENERATE_RECIPE_URL = String.format("https://api.spoonacular.com/mealplanner/generate?apiKey=%s", API_KEY);
     public static final String RANDOM_RECIPE_URL = String.format("https://api.spoonacular.com/recipes/random?apiKey=%s", API_KEY);
 
-    public static final int SEARCH_LIMIT = 5;
+    public static final int SEARCH_LIMIT = 3;
 
     public SpoonacularClient() {
         super();

@@ -1,10 +1,10 @@
 package com.example.mealist;
 
-import static org.junit.Assert.*;
 
 import com.example.mealist.GroceryList.GroceryList;
 import com.example.mealist.GroceryList.ListFragment;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class GroceryListTest {
