@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mealist.AddRecipe.Ingredient;
 import com.example.mealist.AddRecipe.Recipe;
@@ -28,11 +27,10 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import org.json.JSONArray;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +45,7 @@ public class ListFragment extends Fragment implements View.OnClickListener {
             "Oil, Vinegar, Salad Dressing", "Condiments"};
     public static final String[] COLD_PRESERVED = {"Refrigerated", "Frozen", "Canned and Jarred"};
     public static final String[] DAIRY= {"Milk, Eggs, Other Dairy", "Cheese"};
+
     public static final String[] MEAT = {"Meat", "Seafood"};
     public static final String[] DRINKS = {"Tea and Coffee", "Beverages", "Alcoholic Beverages"};
     public static final String[] NUTS_FRUITS_VEG = {"Produce", "Dried Fruits", "Nuts"};
@@ -96,10 +95,12 @@ public class ListFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_list, container, false);
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
 
         startTime = System.currentTimeMillis();
@@ -288,46 +289,34 @@ public class ListFragment extends Fragment implements View.OnClickListener {
 
     public static String getAisleGrouping(String aisle) {
 
-        for (String name: GRAINS) {
-            if (aisle.contains(name)) {
-                return GroceryList.KEY_GRAINS;
-            }
+        String first_aisle = aisle.split(";")[0];
+
+        if (Arrays.asList(GRAINS).contains(first_aisle)) {
+            return GroceryList.KEY_GRAINS;
         }
 
-        for (String name : PANTRY) {
-            if (aisle.contains(name)) {
-                return GroceryList.KEY_PANTRY;
-            }
+        if (Arrays.asList(PANTRY).contains(first_aisle)) {
+            return GroceryList.KEY_PANTRY;
         }
 
-        for (String name : COLD_PRESERVED) {
-            if (aisle.contains(name)) {
-                return GroceryList.KEY_COLD_PRESERVED;
-            }
+        if (Arrays.asList(COLD_PRESERVED).contains(first_aisle)) {
+            return GroceryList.KEY_COLD_PRESERVED;
         }
 
-        for (String name : DAIRY) {
-            if (aisle.contains(name)) {
-                return GroceryList.KEY_DAIRY;
-            }
+        if (Arrays.asList(DAIRY).contains(first_aisle)) {
+            return GroceryList.KEY_DAIRY;
         }
 
-        for (String name : MEAT) {
-            if (aisle.contains(name)) {
-                return GroceryList.KEY_MEAT;
-            }
+        if (Arrays.asList(MEAT).contains(first_aisle)) {
+            return GroceryList.KEY_MEAT;
         }
 
-        for (String name : DRINKS) {
-            if (aisle.contains(name)) {
-                return GroceryList.KEY_DRINKS;
-            }
+        if (Arrays.asList(DRINKS).contains(first_aisle)) {
+            return GroceryList.KEY_DRINKS;
         }
 
-        for (String name : NUTS_FRUITS_VEG) {
-            if (aisle.contains(name)) {
-                return GroceryList.KEY_NUTS_FRUIT_VEG;
-            }
+        if (Arrays.asList(NUTS_FRUITS_VEG).contains(first_aisle)) {
+            return GroceryList.KEY_NUTS_FRUIT_VEG;
         }
 
         return GroceryList.KEY_OTHER;
