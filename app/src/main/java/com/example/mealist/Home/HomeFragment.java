@@ -101,8 +101,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mTvDateDay.setText(""+date.getDayOfMonth());
 
         mDate = java.sql.Date.valueOf(String.valueOf(date));
-        Log.i(TAG, mDate.toString());
-        Log.i(TAG, date.toString());
     }
 
     private void queryMeals() {

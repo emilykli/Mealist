@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionAdapter;
@@ -49,6 +50,17 @@ public class ListFragment extends Fragment implements View.OnClickListener {
     public static final String[] MEAT = {"Meat", "Seafood"};
     public static final String[] DRINKS = {"Tea and Coffee", "Beverages", "Alcoholic Beverages"};
     public static final String[] NUTS_FRUITS_VEG = {"Produce", "Dried Fruits", "Nuts"};
+
+    public static final HashMap<String, String> AISLE_KEY_TO_TITLE = new HashMap<String, String>() {{
+        put(GroceryList.KEY_GRAINS, "Grains");
+        put(GroceryList.KEY_PANTRY, "Pantry");
+        put(GroceryList.KEY_COLD_PRESERVED, "Cold/Preserved");
+        put(GroceryList.KEY_DAIRY, "Dairy");
+        put(GroceryList.KEY_MEAT, "Meat");
+        put(GroceryList.KEY_DRINKS, "Drinks");
+        put(GroceryList.KEY_NUTS_FRUIT_VEG, "Nuts/Fruits/Vegetables");
+        put(GroceryList.KEY_OTHER, "Other");
+    }};
 
 
     private static SectionedRecyclerViewAdapter mSectionedAdapter;
@@ -188,14 +200,16 @@ public class ListFragment extends Fragment implements View.OnClickListener {
                 GroceryList myList = lists.get(0);
                 mAllIngredients = myList.getIngredients();
 
+                int numAisles = 0;
                 for (String aisle: GroceryList.AISLES) {
                     List<Ingredient> myAisle = myList.getAisle(aisle);
                     if (myAisle.size() > 0) {
-                        mSectionedAdapter.addSection(new AisleSection(aisle, myAisle));
+                        mSectionedAdapter.addSection(new AisleSection(AISLE_KEY_TO_TITLE.get(aisle), myAisle));
+                        mSectionedAdapter.notifyItemInserted(numAisles);
+                        numAisles++;
                     }
                 }
 
-                mSectionedAdapter.notifyDataSetChanged();
                 addIngredients = System.currentTimeMillis();
                 Log.i("time", "finish adding everything: " + (addIngredients - startTime));
             }
@@ -260,7 +274,7 @@ public class ListFragment extends Fragment implements View.OnClickListener {
                     for (String aisle: GroceryList.AISLES) {
                         List<Ingredient> myAisle = list.getAisle(aisle);
                         if (myAisle.size() > 0) {
-                            mSectionedAdapter.addSection(new AisleSection(aisle, myAisle));
+                            mSectionedAdapter.addSection(new AisleSection(AISLE_KEY_TO_TITLE.get(aisle), myAisle));
                             mSectionedAdapter.notifyItemInserted(numAisles);
                             numAisles++;
                         }
