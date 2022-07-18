@@ -229,21 +229,31 @@ public class AddRecipeFragment extends Fragment {
             recipe.setVegetarian(jsonObject.getBoolean(Recipe.KEY_VEGETARIAN));
 
             JSONArray nutrients = jsonObject.getJSONObject("nutrition").getJSONArray("nutrients");
-            for(int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {
-                JSONObject nutrient = (JSONObject) nutrients.get(nutrientIndex);
-                String name = nutrient.getString("name");
-                if (name.equals("Calories")) {
-                    recipe.setCalories(nutrient.getDouble("amount"));
+            try {
+                for (int nutrientIndex = 0; nutrientIndex < nutrients.length(); nutrientIndex++) {
+                    JSONObject nutrient = (JSONObject) nutrients.get(nutrientIndex);
+                    String name = nutrient.getString("name");
+                        if (name.equals("Calories")) {
+                            recipe.setCalories(nutrient.getDouble("amount"));
+                        }
+                        else if (name.equals("Fat")) {
+                            recipe.setFat(nutrient.getDouble("amount"));
+                        }
+                        else if (name.equals("Carbohydrates")) {
+                            recipe.setCarbs(nutrient.getDouble("amount"));
+                        }
+                        else if (name.equals("Protein")) {
+                            recipe.setProtein(nutrient.getDouble("amount"));
+                        }
+
                 }
-                else if (name.equals("Fat")){
-                    recipe.setFat(nutrient.getDouble("amount"));
-                }
-                else if (name.equals("Carbohydrates")) {
-                    recipe.setCarbs(nutrient.getDouble("amount"));
-                }
-                else if (name.equals("Protein")) {
-                    recipe.setProtein(nutrient.getDouble("amount"));
-                }
+            }
+            catch (Exception e) {
+                recipe.setCalories(0.0);
+                recipe.setFat(0.0);
+                recipe.setCarbs(0.0);
+                recipe.setProtein(0.0);
+                Toast.makeText(getContext(), "Error retrieving nutrient info...", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
