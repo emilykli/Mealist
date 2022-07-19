@@ -139,7 +139,9 @@ public class AddRecipeFragment extends Fragment {
 
                     @Override
                     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Log.e(TAG, "search failed", throwable);
+                        Toast.makeText(getContext(), "Search failed! Please try again!", Toast.LENGTH_SHORT).show();
+                        SpoonacularClient.changeApiKey();
+                        mPbLoading.setVisibility(ProgressBar.INVISIBLE);
                     }
                 });
                 mEtRecipeSearch.setText("");
@@ -300,7 +302,6 @@ public class AddRecipeFragment extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
             }
         });
     }
