@@ -129,22 +129,31 @@ public class AddRecipeFragment extends Fragment {
                 }
                 mPbLoading.setVisibility(ProgressBar.VISIBLE);
                 mTvNoRecipes.setVisibility(TextView.INVISIBLE);
-                client.getRecipes(searchQuery, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Headers headers, JSON json) {
-                        JSONObject jsonObject = json.jsonObject;
-                        mAdapter.clear();
-                        addRecipesFromApiCall(jsonObject, "results");
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Toast.makeText(getContext(), "Search failed! Please try again!", Toast.LENGTH_SHORT).show();
-                        SpoonacularClient.changeApiKey();
-                        mPbLoading.setVisibility(ProgressBar.INVISIBLE);
-                    }
-                });
+                getRecipesFromApi(searchQuery);
                 mEtRecipeSearch.setText("");
+            }
+        });
+    }
+
+    private void getRecipesFromApi(String searchQuery) {
+        client.getRecipes(searchQuery, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONObject jsonObject = json.jsonObject;
+                mAdapter.clear();
+                addRecipesFromApiCall(jsonObject, "results");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                if (SpoonacularClient.NUM_API_KEY_CHANGES >= SpoonacularClient.API_KEYS.length) {
+                    Toast.makeText(getContext(), "Search failed!", Toast.LENGTH_SHORT).show();
+                    mPbLoading.setVisibility(ProgressBar.INVISIBLE);
+                }
+                else {
+                    SpoonacularClient.changeApiKey();
+                    getRecipesFromApi(searchQuery);
+                }
             }
         });
     }
