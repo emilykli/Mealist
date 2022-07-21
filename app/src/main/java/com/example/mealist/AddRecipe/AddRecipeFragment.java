@@ -165,20 +165,33 @@ public class AddRecipeFragment extends Fragment {
                 mPqRecipes = new PriorityQueue(SpoonacularClient.SEARCH_LIMIT, new RecommendationComparator());
                 mPbLoading.setVisibility(ProgressBar.VISIBLE);
 
-                client.generateRandomMeals(new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Headers headers, JSON json) {
-                        mAdapter.clear();
-                        JSONObject jsonObject = json.jsonObject;
-                        addRecipesFromApiCall(jsonObject, "recipes");
-                    }
+                generateRecommendations();
 
-                    @Override
-                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Toast.makeText(getContext(), "Error generating recommendations", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            }
+        });
+    }
 
+    /**
+     * Takes randomly generated meals and ranks them based on recommendation algorithm
+     */
+    private void generateRecommendations() {
+        client.generateRandomMeals(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                mAdapter.clear();
+                JSONObject jsonObject = json.jsonObject;
+                addRecipesFromApiCall(jsonObject, "recipes");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                if (SpoonacularClient.NUM_API_KEY_CHANGES >= SpoonacularClient.API_KEYS.length) {
+                    Toast.makeText(getContext(), "Failed generating recommendations!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    SpoonacularClient.changeApiKey();
+                    generateRecommendations();
+                }
             }
         });
     }
