@@ -22,7 +22,7 @@
         <LinearLayout
             android:layout_width="@dimen/date_ball_size"
             android:layout_height="@dimen/date_ball_size"
-            android:background="@color/tart_orange"
+            android:background="@drawable/blue_purple_gradient"
             android:gravity="center"
             android:orientation="vertical">
 

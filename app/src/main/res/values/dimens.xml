@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="app_name_size">25sp</dimen>
+
     <dimen name="access_margin_horizontal">15dp</dimen>
     <dimen name="access_margin_vertical">5dp</dimen>
+    <dimen name="access_margin_top">20dp</dimen>
     <dimen name="logo_size">50dp</dimen>
     <dimen name="access_text_size">35sp</dimen>
-    <dimen name="access_word_top">15dp</dimen>
+    <dimen name="access_word_top">150dp</dimen>
     <dimen name="access_word_bottom">5dp</dimen>
+    <dimen name="access_box_corner_radius">50dp</dimen>
 
     <dimen name="list_box_height">100dp</dimen>
-    <dimen name="bottom_navigation_bar_height">45dp</dimen>
+    <dimen name="bar_height">45dp</dimen>
 
     <dimen name="signup_words_margin">5dp</dimen>
     <dimen name="corner_radius">50dp</dimen>
@@ -24,6 +28,7 @@
     <dimen name="meal_padding_margin">10dp</dimen>
     <dimen name="date_picker_margin">15dp</dimen>
 
+    <dimen name="search_box_width">250dp</dimen>
     <dimen name="recipe_picker_top_margin">140dp</dimen>
     <dimen name="recipe_picker_margin">5dp</dimen>
     <dimen name="recipe_preview_width">210dp</dimen>
@@ -38,5 +43,20 @@
     <dimen name="date_cardview_arrow_margin">10dp</dimen>
 
     <dimen name="aisle_cardview">10dp</dimen>
+
+    <!--profile-->
+    <dimen name="username_top_margin">40dp</dimen>
+    <dimen name="username_start_margin">35dp</dimen>
+    <dimen name="recents_top_margin">15dp</dimen>
+    <dimen name="username_text_size">30sp</dimen>
+    <dimen name="profile_subtitles_text_size">18sp</dimen>
+    <dimen name="recents_height">190dp</dimen>
+    <dimen name="recents_image_size">130dp</dimen>
+    <dimen name="recents_text_height">40dp</dimen>
+    <dimen name="small_padding">5dp</dimen>
+    <dimen name="favorites_height">200dp</dimen>
+    <dimen name="item_favorites_height">40dp</dimen>
+    <dimen name="item_favorites_corner_radius">10dp</dimen>
+
 
 </resources>

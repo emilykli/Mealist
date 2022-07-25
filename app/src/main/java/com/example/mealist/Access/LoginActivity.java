@@ -8,11 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.mealist.Backend.SpoonacularClient;
 import com.example.mealist.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -22,6 +19,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity";
 
+    private TextView tvLogin;
     private EditText etUsername;
     private EditText etPassword;
     private Button btnLogin;
@@ -35,6 +33,9 @@ public class LoginActivity extends AppCompatActivity {
         if (ParseUser.getCurrentUser() != null) {
             goMainActivity();
         }
+
+        tvLogin = findViewById(R.id.tvLogin);
+        TextGradient.setGradient(tvLogin);
 
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);

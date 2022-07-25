@@ -1,6 +1,7 @@
 package com.example.mealist.Access;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -11,13 +12,13 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 
 import com.example.mealist.AddRecipe.Recipe;
 import com.example.mealist.MakeMealPlan.MakePlanFragment;
 import com.example.mealist.GroceryList.ListFragment;
 import com.example.mealist.Home.HomeFragment;
+import com.example.mealist.Profile.ProfileFragment;
 import com.example.mealist.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView mNvDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
+
 
     final FragmentManager mFragmentManager = getSupportFragmentManager();
     private BottomNavigationView mBottomNavigationView;
@@ -43,10 +46,16 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbarLayout);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mDrawer = findViewById(R.id.drawer_layout);
+        mDrawerToggle = setupDrawerToggle();
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerToggle.syncState();
+        mDrawer.addDrawerListener(mDrawerToggle);
+
         mNvDrawer = findViewById(R.id.nvDrawer);
         setupDrawerContent(mNvDrawer);
 
@@ -90,7 +99,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+
     private void setupDrawerContent(NavigationView navigationView) {
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -103,6 +117,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectDrawerItem(MenuItem menuItem) {
         menuItem.setChecked(true);
+        switch(menuItem.getItemId()) {
+            case R.id.miLogOut:
+                ParseUser.logOutInBackground(new LogOutCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Issue with logging out", e);
+                            return;
+                        }
+                        else {
+                            goLoginActivity();
+                        }
+                    }
+                });
+                break;
+
+            case R.id.miProfile:
+                mFragmentManager.beginTransaction().replace(R.id.flContainer, new ProfileFragment()).commit();
+                break;
+        }
         mDrawer.closeDrawers();
     }
 
@@ -114,21 +148,6 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
-        }
-
-        if (item.getItemId() == R.id.miLogout) {
-            ParseUser.logOutInBackground(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, "Issue with logging out", e);
-                        return;
-                    }
-                    else {
-                        goLoginActivity();
-                    }
-                }
-            });
         }
 
         return super.onOptionsItemSelected(item);
@@ -162,4 +181,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }

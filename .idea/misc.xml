@@ -3,9 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/access_box_colors.xml" value="0.2275" />
+        <entry key="app/src/main/res/drawable/blue_purple_gradient.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_arrow_left.xml" value="0.202" />
         <entry key="app/src/main/res/drawable/ic_arrow_right.xml" value="0.202" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/drawable/vertical_blue_purple_gradient.xml" value="0.2655" />
+        <entry key="app/src/main/res/font/.xml" value="0.3770833333333333" />
+        <entry key="app/src/main/res/font/numans.xml" value="0.3770833333333333" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.2874562581380209" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.10225118001302083" />
         <entry key="app/src/main/res/layout/activity_recipe_detail.xml" value="0.4492753623188406" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.30364583333333334" />
@@ -15,8 +20,11 @@
         <entry key="app/src/main/res/layout/fragment_home_dialog.xml" value="0.2635416666666667" />
         <entry key="app/src/main/res/layout/fragment_list.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/layout/fragment_make_plan.xml" value="0.22760416666666666" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/item_aisle.xml" value="0.2463768115942029" />
+        <entry key="app/src/main/res/layout/item_favorites.xml" value="0.29891304347826086" />
         <entry key="app/src/main/res/layout/item_list_ingredient.xml" value="0.3078125" />
+        <entry key="app/src/main/res/layout/item_recent.xml" value="0.29891304347826086" />
         <entry key="app/src/main/res/layout/item_recipe_preview.xml" value="0.2265625" />
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.1911231884057971" />
         <entry key="app/src/main/res/menu/drawer_view.xml" value="0.3177083333333333" />

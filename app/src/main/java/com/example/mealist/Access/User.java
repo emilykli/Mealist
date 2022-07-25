@@ -1,4 +1,4 @@
-package com.example.mealist.Backend;
+package com.example.mealist.Access;
 
 public class User {
     public static final String KEY_CHEAP_PREFERENCE = "cheapPreference";

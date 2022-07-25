@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.example.mealist.Backend.User;
+import com.example.mealist.Access.User;
 import com.example.mealist.R;
 import com.example.mealist.Backend.SpoonacularClient;
 import com.parse.ParseException;

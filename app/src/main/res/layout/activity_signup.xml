@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/blue_purple_gradient"
     tools:context=".Access.SignupActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/drip"
+        />
 
     <LinearLayout
         android:id="@+id/llLogoText"
@@ -20,6 +29,7 @@
         >
 
         <TextView
+            style="@style/specialText"
             android:id="@+id/tvSignup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,42 +40,80 @@
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/etUsername"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/accessBoxes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/access_field_1"
-        android:inputType="textPersonName"
+        android:id="@+id/tilUsername"
         android:layout_marginHorizontal="@dimen/access_margin_horizontal"
         android:layout_marginVertical="@dimen/access_margin_vertical"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llLogoText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="98dp" />
+        app:boxCornerRadiusBottomEnd="@dimen/access_box_corner_radius"
+        app:boxCornerRadiusBottomStart="@dimen/access_box_corner_radius"
+        app:boxCornerRadiusTopEnd="@dimen/access_box_corner_radius"
+        app:boxCornerRadiusTopStart="@dimen/access_box_corner_radius">
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/access_field_1"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/etPassword"
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/accessBoxes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/access_field_2"
-        android:inputType="textPersonName"
+        android:id="@+id/tilPassword"
         android:layout_marginHorizontal="@dimen/access_margin_horizontal"
         android:layout_marginVertical="@dimen/access_margin_vertical"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+        app:boxCornerRadiusBottomEnd="@dimen/access_box_corner_radius"
+        app:boxCornerRadiusBottomStart="@dimen/access_box_corner_radius"
+        app:boxCornerRadiusTopEnd="@dimen/access_box_corner_radius"
+        app:boxCornerRadiusTopStart="@dimen/access_box_corner_radius"
+
+        app:layout_constraintTop_toBottomOf="@+id/tilUsername">
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/access_field_2"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/access_margin_horizontal"
-        android:layout_marginVertical="@dimen/access_margin_vertical"
+        android:layout_marginTop="@dimen/access_margin_top"
         android:text="@string/sign_up"
+        app:cornerRadius="@dimen/corner_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
+
+    <TextView
+        android:id="@+id/tvLoginLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/log_in"
+        android:layout_margin="@dimen/signup_words_margin"
+        android:textColor="@color/lygmy_blue_variation"
+        android:clickable="true"
+        app:layout_constraintTop_toBottomOf="@id/btnSignup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,11 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.mealist.R;
 import com.parse.LogInCallback;
@@ -20,14 +19,19 @@ public class SignupActivity extends AppCompatActivity {
 
     public static final String TAG = "SignupActivity";
 
+    private TextView tvSignup;
     private EditText etUsername;
     private EditText etPassword;
     private Button btnSignup;
+    private TextView tvLoginLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        tvSignup = findViewById(R.id.tvSignup);
+        TextGradient.setGradient(tvSignup);
 
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
@@ -39,6 +43,15 @@ public class SignupActivity extends AppCompatActivity {
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
                 signupUser(username, password);
+            }
+        });
+
+        tvLoginLink = findViewById(R.id.tvLoginLink);
+        tvLoginLink.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                goLoginActivity();
             }
         });
     }
@@ -53,7 +66,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void done(com.parse.ParseException e) {
                 if (e == null) {
-                    goPostActivity();
+                    goMainActivity();
                 } else {
                     return;
                 }
@@ -64,8 +77,14 @@ public class SignupActivity extends AppCompatActivity {
         loginUser(username, password);
     }
 
-    private void goPostActivity() {
+    private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    public void goLoginActivity() {
+        Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
         finish();
     }
@@ -79,9 +98,10 @@ public class SignupActivity extends AppCompatActivity {
                 }
 
                 else {
-                    goPostActivity();
+                    goMainActivity();
                 }
             }
         });
     }
+
 }

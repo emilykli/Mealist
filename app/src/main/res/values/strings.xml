@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Mealist</string>
 
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
     <string name="access_field_1">Username</string>
     <string name="access_field_2">Password</string>
     <string name="log_in">Log In</string>
@@ -41,5 +44,10 @@
     <string name="add_recipe">Add Recipe</string>
     <string name="nutrition_info">Nutrition Info</string>
     <string name="favorite">Favorite</string>
+
+    <!-- profile -->
+    <string name="recent_recipes">Recent Recipes</string>
+    <string name="favorites">Favorites</string>
+
 
 </resources>
