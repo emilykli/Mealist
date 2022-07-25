@@ -45,17 +45,18 @@
     <dimen name="aisle_cardview">10dp</dimen>
 
     <!--profile-->
-    <dimen name="username_top_margin">40dp</dimen>
+    <dimen name="username_top_margin">30dp</dimen>
     <dimen name="username_start_margin">35dp</dimen>
-    <dimen name="recents_top_margin">15dp</dimen>
+    <dimen name="recents_top_margin">5dp</dimen>
     <dimen name="username_text_size">30sp</dimen>
     <dimen name="profile_subtitles_text_size">18sp</dimen>
-    <dimen name="recents_height">190dp</dimen>
-    <dimen name="recents_image_size">130dp</dimen>
+    <dimen name="recents_height">250dp</dimen>
+    <dimen name="recents_image_size">210dp</dimen>
     <dimen name="recents_text_height">40dp</dimen>
+    <dimen name="recents_right_margin">20dp</dimen>
     <dimen name="small_padding">5dp</dimen>
-    <dimen name="favorites_height">200dp</dimen>
-    <dimen name="item_favorites_height">40dp</dimen>
+    <dimen name="favorites_height">240dp</dimen>
+    <dimen name="item_favorites_height">50dp</dimen>
     <dimen name="item_favorites_corner_radius">10dp</dimen>
 
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/recents_image_size"
     android:layout_height="@dimen/recents_height"
-    android:layout_margin="@dimen/meal_padding_margin"
+    android:layout_marginEnd="@dimen/recents_right_margin"
     >
 
 
@@ -18,10 +18,12 @@
 
     <TextView
         android:id="@+id/tvRecentRecipeName"
-        android:layout_width="match_parent"
+        style="@style/specialText"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/recents_text_height"
-        android:padding="@dimen/small_padding"
+        android:layout_marginTop="@dimen/meal_padding_margin"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivRecentRecipeImage"
         tools:text="@string/sample_recipe_name" />

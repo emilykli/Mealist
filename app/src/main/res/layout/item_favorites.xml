@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_favorites_height"
     android:layout_marginVertical="@dimen/small_padding">
@@ -9,20 +10,26 @@
         android:id="@+id/cvFavorite"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_favorites_height"
-        app:cardBackgroundColor="@android:color/transparent"
+        android:layout_gravity="center_vertical"
         app:cardCornerRadius="@dimen/item_favorites_corner_radius"
-        app:cardElevation="0dp"
-        app:contentPadding="0dp"
+        app:cardElevation="@dimen/zero"
+        app:contentPadding="@dimen/zero"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <TextView
-            android:background="@color/blue_gray"
-            android:id="@+id/tvBreakfastMeals"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:scrollbars="horizontal"
+            android:id="@+id/tvFavorite"
             android:padding="@dimen/meal_padding_margin"
+            android:textColor="@color/lygmy_grey"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            tools:text="@string/sample_recipe_name"
             />
 
     </androidx.cardview.widget.CardView>
