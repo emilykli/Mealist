@@ -44,6 +44,13 @@
 
     <dimen name="aisle_cardview">10dp</dimen>
 
+    <!--detail view-->
+    <dimen name="cardview_corner_radius">30dp</dimen>
+    <dimen name="cardview_vertical_padding">30dp</dimen>
+    <dimen name="cardview_horizontal_padding">15dp</dimen>
+    <dimen name="detail_image_size">150dp</dimen>
+    <dimen name="detail_button_top_margin">20dp</dimen>
+
     <!--profile-->
     <dimen name="username_top_margin">30dp</dimen>
     <dimen name="username_start_margin">35dp</dimen>

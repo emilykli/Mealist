@@ -44,6 +44,7 @@
     <string name="add_recipe">Add Recipe</string>
     <string name="nutrition_info">Nutrition Info</string>
     <string name="favorite">Favorite</string>
+    <string name="recipe_image">Recipe image</string>
 
     <!-- profile -->
     <string name="recent_recipes">Recent Recipes</string>

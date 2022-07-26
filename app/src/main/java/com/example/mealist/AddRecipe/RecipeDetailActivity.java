@@ -63,7 +63,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             mRecipe = (Recipe) getIntent().getParcelableExtra("recipe");
 
             mIvRecipeImage = findViewById(R.id.ivRecipeImage);
-            Glide.with(this).load(mRecipe.getImageLink()).into(mIvRecipeImage);
+            Glide.with(this).load(mRecipe.getImageLink()).override(150, 150).circleCrop().into(mIvRecipeImage);
 
             mTvRecipeName = findViewById(R.id.tvRecipeName);
             mTvRecipeName.setText(mRecipe.getName());

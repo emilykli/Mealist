@@ -12,7 +12,7 @@
         <entry key="app/src/main/res/font/numans.xml" value="0.3770833333333333" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2874562581380209" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.10225118001302083" />
-        <entry key="app/src/main/res/layout/activity_recipe_detail.xml" value="0.4492753623188406" />
+        <entry key="app/src/main/res/layout/activity_recipe_detail.xml" value="0.15569152832031252" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.30364583333333334" />
         <entry key="app/src/main/res/layout/fragment_add.xml" value="0.31856994628906254" />
         <entry key="app/src/main/res/layout/fragment_add_recipe.xml" value="0.25717875162760406" />
