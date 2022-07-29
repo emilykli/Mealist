@@ -26,6 +26,8 @@
     <dimen name="date_text_size">30sp</dimen>
     <dimen name="add_meal_corner_radius">20dp</dimen>
     <dimen name="meal_padding_margin">10dp</dimen>
+    <dimen name="top_meal_text_margin">30dp</dimen>
+    <dimen name="meal_text_margin">20dp</dimen>
     <dimen name="date_picker_margin">15dp</dimen>
 
     <dimen name="search_box_width">250dp</dimen>

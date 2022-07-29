@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mealist.Access.TextGradient;
 import com.example.mealist.AddRecipe.Recipe;
 import com.example.mealist.MakeMealPlan.MealPlan;
 import com.example.mealist.R;
@@ -146,12 +147,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     mTvDinnerMeals.setText(dinnerText);
                 }
 
-                mTvCalorieValue.setText(mCalories + "");
-                mTvCarbValue.setText(mCarbs + "");
-                mTvFatValue.setText(mFat + "");
-                mTvProteinValue.setText(mProtein + "");
+                mTvCalorieValue.setText(roundToHundrethsPlace(mCalories) + "");
+                mTvCarbValue.setText(roundToHundrethsPlace(mCarbs) + "");
+                mTvFatValue.setText(roundToHundrethsPlace(mFat) + "");
+                mTvProteinValue.setText(roundToHundrethsPlace(mProtein) + "");
             }
         });
+    }
+
+    private double roundToHundrethsPlace(double d) {
+        return Math.round(d*100.0)/100.0;
     }
 
     private String mealPlanToString(List<Recipe> mealPlan) {

@@ -2,6 +2,7 @@ package com.example.mealist.AddRecipe;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.mealist.R;
 
 import java.util.List;
@@ -84,7 +88,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             String imageLink = recipe.getImageLink();
 
             if (!imageLink.isEmpty()) {
-                Glide.with(mContext).load(imageLink).into(mIvRecipeImage);
+                Glide.with(mContext).load(imageLink).transform(new MultiTransformation<Bitmap>(new CenterCrop(), new RoundedCorners(20))).into(mIvRecipeImage);
             }
         }
 

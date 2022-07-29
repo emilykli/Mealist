@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mealist.Access.TextGradient;
 import com.example.mealist.R;
 
 public class HomeDialogFragment extends DialogFragment {
@@ -47,6 +48,7 @@ public class HomeDialogFragment extends DialogFragment {
 
         String mealTime = getArguments().getString("mealTime", "No Meal Selected");
         String mealInfo = getArguments().getString("mealInfo", "No meals added");
+        TextGradient.setGradient(mTvMealTime);
         mTvMealTime.setText(mealTime);
         mTvMealInfo.setText(mealInfo);
     }

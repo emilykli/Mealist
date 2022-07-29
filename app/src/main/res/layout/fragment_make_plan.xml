@@ -31,11 +31,13 @@
         />
 
     <TextView
+        style="@style/specialText2"
         android:id="@+id/tvBreakfastText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/breakfast"
-        android:layout_margin="@dimen/meal_padding_margin"
+        android:layout_marginTop="@dimen/top_meal_text_margin"
+        android:layout_marginHorizontal="@dimen/meal_text_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvDateText" />
 
@@ -45,15 +47,17 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="@dimen/add_meal_corner_radius"
-        app:cardElevation="0dp"
-        app:contentPadding="0dp"
+        app:cardElevation="@dimen/zero"
+        app:contentPadding="@dimen/zero"
         android:layout_margin="@dimen/meal_padding_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBreakfastText">
 
     <TextView
-        android:background="@color/blue_gray"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@color/lygmy_blue_dark"
         android:id="@+id/tvBreakfastMeals"
         android:padding="@dimen/meal_padding_margin"
         android:layout_width="match_parent"
@@ -66,11 +70,13 @@
 
 
     <TextView
+        style="@style/specialText2"
         android:id="@+id/tvLunchText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lunch"
-        android:layout_margin="@dimen/meal_padding_margin"
+        android:layout_marginHorizontal="@dimen/meal_text_margin"
+        android:layout_marginTop="@dimen/meal_text_margin"
         app:layout_constraintTop_toBottomOf="@id/cvBreakfast"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -80,15 +86,17 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="@dimen/add_meal_corner_radius"
-        app:cardElevation="0dp"
-        app:contentPadding="0dp"
+        app:cardElevation="@dimen/zero"
+        app:contentPadding="@dimen/zero"
         android:layout_margin="@dimen/meal_padding_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLunchText">
 
         <TextView
-            android:background="@color/mango_tango"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@color/lygmy_blue_dark"
             android:id="@+id/tvLunchMeals"
             android:padding="@dimen/meal_padding_margin"
             android:layout_width="match_parent"
@@ -100,11 +108,13 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
+        style="@style/specialText2"
         android:id="@+id/tvDinnerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dinner"
-        android:layout_margin="@dimen/meal_padding_margin"
+        android:layout_marginTop="@dimen/meal_text_margin"
+        android:layout_marginHorizontal="@dimen/meal_text_margin"
         app:layout_constraintTop_toBottomOf="@id/cvLunch"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -114,15 +124,17 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="@dimen/add_meal_corner_radius"
-        app:cardElevation="0dp"
-        app:contentPadding="0dp"
+        app:cardElevation="@dimen/zero"
+        app:contentPadding="@dimen/zero"
         android:layout_margin="@dimen/meal_padding_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDinnerText">
 
         <TextView
-            android:background="@color/corn"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@color/lygmy_blue_dark"
             android:id="@+id/tvDinnerMeals"
             android:padding="@dimen/meal_padding_margin"
             android:layout_width="match_parent"

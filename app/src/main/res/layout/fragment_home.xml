@@ -46,6 +46,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
+        style="@style/specialText2"
         android:id="@+id/tvMealSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,6 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cvBall" />
 
     <TextView
+        style="@style/specialText2"
         android:id="@+id/tvBreakfastText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,8 +82,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tvBreakfastText">
 
         <TextView
-            android:background="@color/blue_gray"
-            android:alpha="0.8"
+            android:background="@color/lygmy_blue_dark"
+            android:textColor="@color/white"
             android:id="@+id/tvBreakfastMeals"
             android:padding="@dimen/meal_padding_margin"
             android:layout_width="match_parent"
@@ -94,6 +96,7 @@
 
 
     <TextView
+        style="@style/specialText2"
         android:id="@+id/tvLunchText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,8 +119,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tvLunchText">
 
         <TextView
-            android:background="@color/mango_tango"
-            android:alpha="0.8"
+            android:background="@color/lygmy_blue_dark"
+            android:textColor="@color/white"
             android:id="@+id/tvLunchMeals"
             android:padding="@dimen/meal_padding_margin"
             android:layout_width="match_parent"
@@ -129,6 +132,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
+        style="@style/specialText2"
         android:id="@+id/tvDinnerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -151,8 +155,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tvDinnerText">
 
         <TextView
-            android:background="@color/corn"
-            android:alpha="0.8"
+            android:background="@color/lygmy_blue_dark"
+            android:textColor="@color/white"
             android:id="@+id/tvDinnerMeals"
             android:padding="@dimen/meal_padding_margin"
             android:layout_width="match_parent"

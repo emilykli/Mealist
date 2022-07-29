@@ -45,11 +45,17 @@ public class RecentsViewHolder extends RecyclerView.ViewHolder {
 
                 mTvRecentRecipeName.setText(name);
 
-                if (!imageUrl.isEmpty()) {
+                if (imageUrl != null && !imageUrl.isEmpty()) {
                     Glide.with(mContext).load(imageUrl)
                             .transform(new MultiTransformation<Bitmap>(new CenterCrop(), new RoundedCorners(10)))
                             .into(mIvRecentRecipeImage);
 
+                }
+
+                else {
+                    Glide.with(mContext).load(R.mipmap.appicon)
+                            .transform(new MultiTransformation<Bitmap>(new CenterCrop(), new RoundedCorners(10)))
+                            .into(mIvRecentRecipeImage);
                 }
             }
         });

@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
     public void goSignupActivity() {
         Intent i = new Intent(this, SignupActivity.class);
         startActivity(i);
+        overridePendingTransition(R.anim.animation_enter, R.anim.animation_leave);
         finish();
     }
 }

@@ -30,5 +30,12 @@
         <item name="fontFamily">@font/baloo_bhai</item>
     </style>
 
+    <!--style for subtitle text-->
+    <style name="specialText2">
+        <item name="android:textColor">@color/lygmy_grey</item>
+        <item name="android:fontFamily">@font/baloo_bhai</item>
+        <item name="fontFamily">@font/baloo_bhai</item>
+    </style>
+
 
 </resources>
