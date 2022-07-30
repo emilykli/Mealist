@@ -1,66 +1,54 @@
-Capstone App
-===
-
 # Mealist
 
-## Table of Contents
-1. [Overview](#Overview)
-1. [Product Spec](#Product-Spec)
-1. [Wireframes](#Wireframes)
-2. [Schema](#Schema)
+## Description
+Mealist is an app that generates weekly grocery lists based on the user's meal plans. Users can also search for new recipes, get recipes/meal plans recommended to them, and view the nutritional information for their daily meal plans.
 
-## Overview
-### Description
-Allows users to select which recipes they want to cook for the week and generates a shopping list of items they need to make everything. Also generates nutritional information based on what is being made.
-
-### App Evaluation
-<!-- [Evaluation of your app across the following attributes] -->
-- **Category:** Lifestyle
-- **Mobile:** Mobile is most effective for this app because users can carry their phone around while shopping.
-- **Story:** Lets users plan their grocery shopping based on the things they want to eat.
-- **Market:** People who are new to cooking and shopping for themselves, people who want to be more organized.
-- **Habit:** Planning meals every week
-- **Scope:** V1 would allow the user to log in, save the recipes selected by the user, and show the recipe for the day the recipe was selected for. V2 would generate a list of ingredients for the week based on the selected recipes. V3 would generate nutritional information for the week based on the selected recipes.
+## Demo
+[![YouTube Demo](https://yt-embed.live/embed?v=hONBuDTK4Nw)](https://www.youtube.com/watch?v=hONBuDTK4Nw "Mealist Demo")
 
 ## Product Spec
 
-### 1. User Stories (Required and Optional)
+### User Stories (Required and Optional)
 
 **Required Must-have Stories**
 
-* Users can log in and save recipes
-* Saved recipes show nutrition information
-* Saved recipes used to generate grocery shopping list for the week
-* Users can associate their saved recipes with a date/time
-* Checkboxes to mark what you've bought already
-* ...
+- [x] Users can log in and save recipes
+- [x] Saved recipes show nutrition information
+- [x] Saved recipes used to generate grocery shopping list for the week
+- [x] Users can associate their saved recipes with a date/time
+- [x] Checkboxes to mark what's been bought
 
 **Optional Nice-to-have Stories**
 
-* Users can input what they already have
-* Users can see what their friends are making
-* If you buy too much, the app remembers that you already have that ingredient
-* Calendar API
-* [fill in your required user stories here]
-* ...
+- [x] Recommendations
+- [x] Sectioned grocery list
+- [x] Profile page for viewing favorites and recents
+- [x] Automatic API key swapping
 
-### 2. Screen Archetypes
+<!-- ### 2. Screen Archetypes
 
 * Login/Register screens
-    * users can log in and save recipes
+    * Users can log in and save recipes
 * Home Screen/Day at a Glance
     * Users can associate their saved recipes with a date/time
     * Saved recipes show nutrition information
 * Generated Grocery List
     * Saved recipes used to generate grocery shopping list for the week
     * Checkboxes to mark what's been bought already
+    * Sections representing which aisle each ingredient is found in
 * Meal plan creation page
-    * Save recipes
+    * Create a meal plan for a particular date
+    * Generate a meal plan for a particular date
 * Recipe search page
-    * Save recipes
-    * ...
+    * Search up recipes to add to a meal plan
+    * Get recommended recipes to add to a meal plan
+* Recipe detail view
+    * Shows a picture of the recipe, the ingredients in a recipe, and the nutritional information
+* Profile
+    * Shows recently added recipes
+    * Shows recipes that have been favorited by the user
 
-### 3. Navigation
+ ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
 
@@ -73,18 +61,29 @@ Allows users to select which recipes they want to cook for the week and generate
 * Recipe Search Page
     * when + is clicked in Create Meal Plan
 
-<!-- * [list second screen here]
+ * [list second screen here]
    * [list screen navigation here]
    * ... -->
 
 ## Wireframes
-<img src="./wireframe_sketch.jpg" width=600>
+<img src="./wireframe_sketch.jpg" width=200>
 
-### [BONUS] Digital Wireframes & Mockups
+## Credits
+External libraries:
+- [Glide](https://github.com/bumptech/glide)
+- [SectionedRecyclerViewAdapter](https://github.com/luizgrp/SectionedRecyclerViewAdapter)
 
-### [BONUS] Interactive Prototype
+Database:
+- Parse via [Back4App](https://www.back4app.com/login)
 
-## Schema
+API:
+- [Spoonacular](https://spoonacular.com/food-api)
+
+Design: 
+- [Amy Liu, Emily Phally, Megan Phi](https://www.behance.net/gallery/144061749/Public-Transit-UXUI-Case-Study)
+
+
+<!--## Schema
 ### Models
 #### User
 | Property      | Type     | Description |
@@ -164,33 +163,4 @@ Allows users to select which recipes they want to cook for the week and generate
   HTTP Verb | Endpoint | Description
   ----------|----------|------------
   `GET`    | /complexSearch | search recipes
-
-<!-- Example Request and Response
-GET https://api.spoonacular.com/recipes/complexSearch?query=pasta&maxFat=25&number=2
-{
-    "offset": 0,
-    "number": 2,
-    "results": [
-        {
-            "id": 716429,
-            "title": "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
-            "calories": 584,
-            "carbs": "84g",
-            "fat": "20g",
-            "image": "https://spoonacular.com/recipeImages/716429-312x231.jpg",
-            "imageType": "jpg",
-            "protein": "19g"
-        },
-        {
-            "id": 715538,
-            "title": "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-            "calories": 521,
-            "carbs": "69g",
-            "fat": "10g",
-            "image": "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-            "imageType": "jpg",
-            "protein": "35g"
-        }
-    ],
-    "totalResults": 86
-} -->
+-->
